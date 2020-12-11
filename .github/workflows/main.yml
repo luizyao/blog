@@ -54,4 +54,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd nginx/www/
+            # Delete the original files
+            git rm -r -f .
+            git reset --hard origin/gh-pages
             git pull
