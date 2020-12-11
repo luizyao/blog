@@ -15,21 +15,21 @@ featuredImagePreview: false
 
 [pytest-pyppeteer](https://github.com/luizyao/pytest-pyppeteer) 是我写的一个 pytest 插件，支持在 pytest 中运行 [pyppeteer](https://github.com/pyppeteer/pyppeteer)，起因是为了解决工作中的一个测试需求，现在将其开源并做简单介绍。
 
-# 背景
+## 背景
 
-## 为什么不用 Selenium？
+### 为什么不用 Selenium？
 
 主要的原因是 Selenium 的配置比较繁琐，最常见的问题是需要保持 webdriver 和浏览器版本的一致性。
 
-## pyppeteer 的简单介绍
+### pyppeteer 的简单介绍
 
 pyppeteer 是 [puppeteer](https://github.com/puppeteer/puppeteer/)的非官方 python 版本，几乎实现了和其相同的 API，可以非常方便的去操作 Chrome 浏览器。
 
-### pyppeteer 的局限性
+#### pyppeteer 的局限性
 
 目前最明显的问题是没有提供跨浏览器的解决方案，最新的 puppeteer 已经提供对 Firefox 的支持，但是 pyppeteer 可能还需要一些时间。
 
-# 安装
+## 安装
 
 推荐使用 [pipenv](https://github.com/pypa/pipenv) 管理虚拟环境。
 
@@ -45,7 +45,7 @@ $ pipenv install pytest-pyppeteer
 
 ---
 
-# 快速开始
+## 快速开始
 
 用下面这个测试用例来说明：断言电影《活着》的豆瓣评分大于 9.0。
 
@@ -124,7 +124,7 @@ def executable_path(executable_path):
 
 - `--slow`：减缓 pytest-pyppeteer 操作浏览器的速度，默认为 `0.0`，单位是毫秒。
 
-# 同时操作多个浏览器
+## 同时操作多个浏览器
 
 用下面这个测试用例来说明：断言书籍《活着》的豆瓣评分高于其电影的评分。
 
@@ -200,7 +200,7 @@ async def test_multiple_pyppeteer(pyppeteer_factory):
 
 ![断言书籍《活着》的豆瓣评分高于其电影的评分](https://gitee.com/luizyao/pictures/raw/master/img/pytest_pyppeteer_book_movie_lifetimes.gif)
 
-# Github 仓库
+## Github 仓库
 
 更多功能可以访问：<https://github.com/luizyao/pytest-pyppeteer>，如果能帮助到你的话，可以给个 star，也欢迎提 issue 和 pr。
 

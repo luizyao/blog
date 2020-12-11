@@ -21,7 +21,7 @@ pi@raspberrypi:~ $ echo $SHELL
 
 这里可以看到使用的是 `bash`。
 
-# 安装
+## 安装
 
 首先，我们需要先安装一种 [Nerd Font](https://github.com/ryanoasis/nerd-fonts) 字体，这里选择 [Fira Code Nerd Font](https://github.com/tonsky/FiraCode)。
 

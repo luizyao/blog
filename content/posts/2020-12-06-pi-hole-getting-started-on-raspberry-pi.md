@@ -18,7 +18,7 @@ draft: false
 
 pi-hole 之所以能在网络侧过滤广告，使用的是一种叫做 [DNS sinkhole](https://en.wikipedia.org/wiki/DNS_sinkhole) 的技术，它可以作为一个 DNS 服务器，但是提供的是错误的 DNS 解析。
 
-# 安装
+## 安装
 
 pi-hole 可以做一个 [Docker 容器](https://github.com/pi-hole/docker-pi-hole)来提供服务。
 
@@ -29,7 +29,7 @@ pi-hole 可以做一个 [Docker 容器](https://github.com/pi-hole/docker-pi-hol
 ```yaml
 version: "3"
 
-# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
+## More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
 services:
   pihole:
     container_name: pihole
@@ -75,7 +75,7 @@ CONTAINER ID        IMAGE                  COMMAND             CREATED          
 2d21aab833df        pihole/pihole:latest   "/s6-init"          11 seconds ago      Up 6 seconds (health: starting)   0.0.0.0:53->53/udp, 0.0.0.0:53->53/tcp, 0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 0.0.0.0:67->67/udp   pihole
 ```
 
-# WEB 管理界面
+## WEB 管理界面
 
 现在我们可以访问 pi-hole 的管理页面，这里的地址是 <http://raspberrypi.local/admin/>：
 
@@ -85,9 +85,9 @@ CONTAINER ID        IMAGE                  COMMAND             CREATED          
 
 ![pi-hole 登录解锁更多内容](https://gitee.com/luizyao/pictures/raw/master/img/pi-hole-admin-web-after-login.png)
 
-# 使用
+## 使用
 
-## 单台设备使用
+### 单台设备使用
 
 以我的 mac  为例，只需要为当前连接的网络的 DNS 服务器指定为 pi-hole 的 IP 地址：
 
@@ -99,7 +99,7 @@ CONTAINER ID        IMAGE                  COMMAND             CREATED          
 5. 添加你的树莓派的 IP 地址；
 6. 点击 **OK > Apply**；
 
-# 更新 Adlists
+## 更新 Adlists
 
 pi-hole 根据域名过滤不想要的内容，其本身内置的 Adlists 可能不太符合国内的情形。我目前使用的是 [anti-AD](https://github.com/privacy-protection-tools/anti-AD) 提供的 Adlists，它的使用也非常简单：
 
@@ -111,7 +111,7 @@ pi-hole 根据域名过滤不想要的内容，其本身内置的 Adlists 可能
 
 ![更新 Adlists](https://gitee.com/luizyao/pictures/raw/master/img/pi-hole-update-adlists.png)
 
-# 效果
+## 效果
 
 现在我们来看看效果吧。
 

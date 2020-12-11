@@ -13,17 +13,17 @@ draft: false
 
 > 本文使用的是树莓派版本是 `Raspbian GNU/Linux 10 (buster)`。
 
-# 安装 Docker
+## 安装 Docker
 
 > 此部分主要参考官方文档中的 [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)。
 
-## 卸载旧版本
+### 卸载旧版本
 
 ```bash
 pi@raspberrypi:~ $ sudo apt remove docker docker-engine docker.io containerd runc
 ```
 
-## 使用官方脚本安装
+### 使用官方脚本安装
 
 ```bash
 pi@raspberrypi:~ $ curl -fsSL https://get.docker.com -o get-docker.sh
@@ -38,7 +38,7 @@ pi@raspberrypi:~ $ sudo usermod -aG docker pi
 
 这个可能需要我们重新登录才能生效。
 
-## 卸载
+### 卸载
 
 ```bash
 pi@raspberrypi:~ $ sudo apt purge docker-ce docker-ce-cli containerd.io
@@ -46,7 +46,7 @@ pi@raspberrypi:~ $ sudo rm -rf /var/lib/docker
 pi@raspberrypi:~ $ sudo rm -rf /var/lib/containerd
 ```
 
-# 安装 Docker Compose
+## 安装 Docker Compose
 
 Docker Compose 方便我们同时管理多个容器。
 
@@ -80,7 +80,7 @@ pi@raspberrypi:~ $ pipx completions
 
 ---
 
-# 国内镜像加速
+## 国内镜像加速
 
 修改或创建 `/etc/docker/daemon.json` 文件，加入以下内容：
 

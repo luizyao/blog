@@ -14,7 +14,7 @@ Unicode标准为每一个字符提供一个唯一的数字，而不用区分平�
 
 > The Unicode Standard provides a unique number for every character, no matter what platform, device, application or language.
 
-# 基本概念
+## 基本概念
 在开始学习之前，我们需要先了解本文所涉及到的一些基本概念。
 
 **抽象字符（Abstract character）**：用于组织、控制或者表示文本数据的信息单元。
@@ -32,7 +32,7 @@ Unicode标准为每一个字符提供一个唯一的数字，而不用区分平�
 **编码字符（Coded character）**：当抽象字符被映射或者分配到编码空间中特定的码位时，它就被称为编码字符。
 
 
-# 码位
+## 码位
 码位是Unicode标准中很重要的一个概念。它的取值范围是十六进制的`0x0～0x10FFFF`，换算成十进制是0～1114111，共计1114112个。
 
 需要注意的是，一个单一的抽象字符可能对应一个以上的码位。例如，`Ω`既可以表示大写的希腊字母Omega，码位是`U+03A9`，也可以表示物理学中的欧姆符号，码位是`U+2126`。
@@ -55,7 +55,7 @@ Unicode标准为每一个字符提供一个唯一的数字，而不用区分平�
 
 在Unicode标准中，码位的表示方法通常是使用它们的十六进制，并加上`U+`前缀。
 
-## 码位的类型
+### 码位的类型
 码位的分类方法多种多样。我们通过下表来阐明Unicode标准使用的七种类型和一些术语。
 
 | 基本类型               | 简要描述                                   | 是否分配给抽象字符 | 码位范围                                               |
@@ -77,7 +77,7 @@ Unicode标准为每一个字符提供一个唯一的数字，而不用区分平�
 关于它们更多的内容，稍后结合UTF-16再讨论。
 
 
-# 编码方案
+## 编码方案
 在介绍具体的编码方案之前，我们先明确一些新的基本概念。
 
 **Unicode标量值（Unicode scalar value）**：除去高位代理和低位代理之外，所有的Unicode码位，也就是U+0000～U+D7FF和U+E000～U+10FFFF范围内的码位。
@@ -86,7 +86,7 @@ Unicode标准为每一个字符提供一个唯一的数字，而不用区分平�
 
 **编码单元序列（Code unit sequence）**：一个或多个编码单元的有序序列。
 
-## UTF-32
+### UTF-32
 UTF-32将每个Unicode标量值映射成一个无符号的32比特的编码单元，数值与Unicode标量值相同，这是一种定长的编码方案。
 
 注意，UTF-32无法编码U+D800～U+DFFF之间的码位，因为它们不属于Unicode标量值。
@@ -98,7 +98,7 @@ Traceback (most recent call last):
 UnicodeEncodeError: 'utf-32' codec can't encode character '\ud800' in position 0: surrogates not allowed
 ```
 
-## UTF-16
+### UTF-16
 UTF-16将Unicode标量值中`U+0000～U+D7FF`和`U+E000～U+FFFF`范围内的码位映射成一个无符号的16比特的编码单元，数值与Unicode标量值相同。将`U+10000～U+10FFFF`范围内的码位映射成一个代理对，所谓的代理对就是上文提到的高位代理和低位代理。UTF-16是一种定长和变长兼顾的编码方案。
 
 下表阐明了UTF-16的编码方式。
@@ -121,7 +121,7 @@ UTF-16将Unicode标量值中`U+0000～U+D7FF`和`U+E000～U+FFFF`范围内的码
 b'\xd8\x00\xdf\x02'
 ```
 
-## UTF-8
+### UTF-8
 UTF-8将每个Unicode标量值映射成一到四个无符号的8比特的编码单元，这是一种变长的编码方案。
 
 下表阐明了UTF-8的编码方式。
@@ -156,10 +156,10 @@ b'\xf0\x90\x8c\x82'
 
 
 
-# Unicode带来的问题
+## Unicode带来的问题
 
 
-## 比较
+### 比较
 Unicode标准可能会导致两个或者多个字符存在等价的现象。
 
 ```bash
@@ -208,7 +208,7 @@ normalize函数的第一个参数可以是NFC、NFD、NFKC和NFKD，我们重点
 **NFC（Normalization Form C）**：先应用NFD，再合成预先组合的形式。
 
 
-# 参考资料
+## 参考资料
 
 1. UnicodeStandard-12.0：<https://www.unicode.org/versions/Unicode12.1.0/>
 2. unicodedata.normalize：<https://docs.python.org/3/library/unicodedata.html?highlight=unicodedata#unicodedata.normalize>
