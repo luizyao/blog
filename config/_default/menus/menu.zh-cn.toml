@@ -1,0 +1,24 @@
+[[main]]
+  name = "博客"
+  url = ""
+  weight = -110
+
+[[main]]
+  name = "开源项目"
+  url = "projects/"
+  weight = -109
+
+# Submenus are done this way: parent -> identifier
+[[main]]
+  name = "外链"
+  identifier = "Links"
+  weight = -108
+[[main]]
+  parent = "Links"
+  name = "Clarity 主题"
+  url = "https://github.com/chipzoller/hugo-clarity"
+
+[[main]]
+  name = "关于"
+  url = "about/"
+  weight = -107
