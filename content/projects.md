@@ -1,8 +1,6 @@
 ---
 title: "开源项目"
 date: 2020-12-11
-type: section
-layout: "projects"
 draft: false
 comment: false
 ---
