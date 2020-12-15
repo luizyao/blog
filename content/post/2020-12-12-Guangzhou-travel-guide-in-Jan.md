@@ -4,7 +4,7 @@ subtitle: ""
 date: 2020-12-11
 draft: true
 author: "Luiz Yao"
-summary: "老婆心心念念的广州之旅终于提上了日程，一月份的广州，我们来了。"
+summary: "老婆心心念念的广州之旅终于提上了日程，一月的广州，我们来了。"
 tags: ["广州", "顺德"]
 categories: ["旅游"]
 toc: true
