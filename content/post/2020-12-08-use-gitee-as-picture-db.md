@@ -6,7 +6,7 @@ date:        2020-12-08
 author:      "Luiz Yao"
 image:       ""
 tags:        ["工具"]
-categories:  ["其它"]
+categories:  ["笔记"]
 draft: false
 toc: true
 ---

@@ -4,8 +4,8 @@ subtitle: ""
 summary: "在 pytest 中优雅地调用 pyppeteer。"
 date: 2020-11-06
 author: "Luiz Yao"
-tags: ["pytest-pyppeteer"]
-categories: ["Pytest"]
+tags: ["pytest", "pytest-pyppeteer"]
+categories: ["Python"]
 draft: false
 toc: true
 featured: true

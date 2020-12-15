@@ -5,7 +5,7 @@ summary: "介绍 Unicode 的一些基本概念和常见的编码方案。"
 date: 2020-07-25
 author: "Luiz Yao"
 tags: ["unicode"]
-categories: ["其它"]
+categories: ["笔记"]
 draft: false
 toc: true
 ---
