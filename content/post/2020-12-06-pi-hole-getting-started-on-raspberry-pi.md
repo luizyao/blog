@@ -15,7 +15,7 @@ toc: true
 
 本文介绍如何使用它在我们的树莓派上搭建一个 Ad Blocker。
 
-> 如果你不知道树莓派是什么，可以参考我的这篇文章：[树莓派入门](/2020-11-28-raspberry-pi-getting-started)。
+> 如果你不知道树莓派是什么，可以参考我的这篇文章：[树莓派入门](/post/2020-11-28-raspberry-pi-getting-started)。
 
 pi-hole 之所以能在网络侧过滤广告，使用的是一种叫做 [DNS sinkhole](https://en.wikipedia.org/wiki/DNS_sinkhole) 的技术，它可以作为一个 DNS 服务器，但是提供的是错误的 DNS 解析。
 
@@ -23,7 +23,7 @@ pi-hole 之所以能在网络侧过滤广告，使用的是一种叫做 [DNS sin
 
 pi-hole 可以做一个 [Docker 容器](https://github.com/pi-hole/docker-pi-hole)来提供服务。
 
->如果你不知道怎么在树莓派上安装 Docker，可以参考我的这篇文章：[在树莓派上安装 Docker 和 Docker Compose](/2020-12-05-docker-installation-on-raspberry-pi)
+>如果你不知道怎么在树莓派上安装 Docker，可以参考我的这篇文章：[在树莓派上安装 Docker 和 Docker Compose](/post/2020-12-05-docker-installation-on-raspberry-pi)
 
 首先，我们需要编写 `docker-compose.yml` 文件（在官方给的示例上修改）：
 
