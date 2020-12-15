@@ -5,10 +5,12 @@ draft: false
 comment: false
 ---
 
-我热爱并持续关注开源社区。目前开源的项目有：
+我热爱并持续关注开源社区。欢迎 follow 我的 [Github](https://github.com/luizyao)。![](https://img.shields.io/github/followers/luizyao?style=social)![](https://img.shields.io/github/stars/luizyao?style=social)
+
+目前开源的项目有：
 
 - [pytest-pyppeteer](https://github.com/luizyao/pytest-pyppeteer)
-    
+  
     ![pytest-pyppeteer](https://socialify.git.ci/luizyao/pytest-pyppeteer/image?&forks=1&issues=1&language=1&owner=1&pulls=1&stargazers=1&theme=Light)
   
     支持在 [pytest](https://docs.pytest.org/en/stable/) 中调用 [pyppeteer](https://github.com/pyppeteer/pyppeteer)。
