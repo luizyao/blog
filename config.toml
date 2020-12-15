@@ -3,7 +3,6 @@
 baseurl = "https://luizyao.com/"  # Include trailing slash
 title = "小鹿的先森"
 author = "Luiz Yao"
-copyright = "Copyright © 2020, Luiz Yao; all rights reserved."
 # canonifyurls = true
 paginate = 10
 theme = "hugo-clarity"
@@ -71,7 +70,7 @@ codeMaxLines = 7
 codeLineNumbers = false
 
 # enable math notation. Swith to `true` to enable mathjax in your site.
-enableMathNotation = true
+enableMathNotation = false
 
 # directory(s) where your articles are located
 mainSections = ["post"] # see config details here https://gohugo.io/functions/where/#mainsections
@@ -114,8 +113,8 @@ languageMenuName = "🌐"
 # numberOfFeaturedPosts = 8
 
 # Date format. Checkout https://gohugo.io/functions/format/#hugo-date-and-time-templating-reference for details.
-# dateFormat = "2006-01-02" # Default to "Jan 2, 2006".
+dateFormat = "2006-01-02" # Default to "Jan 2, 2006".
 # customFonts = false # toggle to true if you want to use custom fonts only.
 
 # The year when ths website was created
-# since = 2016
+since = 2019
