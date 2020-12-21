@@ -43,6 +43,10 @@ series = "series"
     noClasses = false
     # style = "monokai"
     tabWidth = 4
+  [markup.tableOfContents]
+    endLevel = 4
+    ordered = false
+    startLevel = 2
 
 [params]
 author = "Luiz Yao"
