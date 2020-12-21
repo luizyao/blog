@@ -11,7 +11,7 @@ toc: true
 
 > 目前 macOS 的版本是：macOS Big Sur 11.1
 
-## HomeBrew 国内镜像
+## HomeBrew
 
 目前使用的国内源是[清华源](https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/)。
 
@@ -22,6 +22,10 @@ toc: true
 $ git -C "$(brew --repo)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git
 
 $ git -C "$(brew --repo homebrew/core)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git
+
+$ git -C "$(brew --repo homebrew/cask)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask.git
+
+$ git -C "$(brew --repo homebrew/cask-fonts)" remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-cask-fonts.git
 
 # 更换后测试工作是否正常
 $ brew update
@@ -36,7 +40,9 @@ $ echo 'export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homeb
 $ source ~/.zprofile
 ```
 
-## ~~npm 国内镜像~~
+## ~~npm~~
+
+### 国内镜像
 
 使用淘宝的 `cnpm` 取代官方的 `npm`：
 
@@ -48,7 +54,9 @@ $ npm install -g cnpm --registry=https://registry.npm.taobao.org
 $ cnpm i -g gitmoji-cli
 ```
 
-## 为终端配置代理
+## 终端
+
+### 配置代理
 
 > 参考：<https://github.com/mrdulin/blog/issues/18>
 
@@ -98,3 +106,34 @@ IP	: 121.225.27.7
 
 URL	: http://www.cip.cc/121.225.27.7
 ```
+
+## GitHub
+
+### SSH 代理
+
+修改 `~/.ssh/config` 文件：
+
+```conf
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_rsa
+    ProxyCommand nc -v -x 127.0.0.1:1086 %h %p
+```
+
+### 修改 hosts 解决访问慢的问题
+
+> 参考：<https://github.com/521xueweihan/GitHub520>
+
+安装 **switchhosts**：
+
+```zsh
+$ brew install switchhosts
+```
+
+配置如下：
+
+![switchhosts 配置](https://gitee.com/luizyao/pictures/raw/master/img/Xnip2020-12-22_05-46-55.png)
+
+- URL：<https://gitee.com/xueweihan/codes/6g793pm2k1hacwfbyesl464/raw?blob_name=GitHub520.yml>
+
