@@ -48,7 +48,7 @@ $ pipenv install pytest-pyppeteer
 
 用下面这个测试用例来说明：断言电影《活着》的豆瓣评分大于 9.0。
 
-```python
+```python3
 from dataclasses import dataclass
 
 from pytest_pyppeteer.models import Browser
@@ -101,7 +101,7 @@ async def test_lifetimes(pyppeteer: Browser):
 
 或者，在你的 `conftest.py` 文件中指定:
 
-```python
+```python3
 @pytest.fixture(scope="session")
 def executable_path(executable_path):
     if executable_path is None:
@@ -127,7 +127,7 @@ def executable_path(executable_path):
 
 用下面这个测试用例来说明：断言书籍《活着》的豆瓣评分高于其电影的评分。
 
-```python
+```python3
 import asyncio
 from dataclasses import dataclass
 
