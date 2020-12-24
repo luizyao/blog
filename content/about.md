@@ -3,6 +3,8 @@ title: "关于"
 date: 2020-12-11
 draft: false
 comment: false
+showDate: false
+showShare: false
 ---
 
 Hello，我是一名自动化工程师，目前任职于 [Netgear](https://www.netgear.com/)，专注于 WEB 相关的测试技术。
