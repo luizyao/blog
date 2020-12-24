@@ -55,7 +55,7 @@ languageCode = "zh-CN"
   author = "Luiz Yao"
   twitter = "@yaomeng614"
   largeTwitterCard = false # set to true if you want to show a large twitter card image. The default is a small twitter card image
-  introDescription = "一个丈夫、父亲、儿子，终身学习者。"
+  # introDescription = "一个丈夫、父亲、儿子，终身学习者。"
   # description = "" # set your site's description here. will be use for home page content meta tags (seo). Alternatively set this description in your homepage content file i.e content/_index.md. Whatever is set in the latter will take precedence
 
   # Google analytics Id
