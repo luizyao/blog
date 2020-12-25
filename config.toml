@@ -7,7 +7,7 @@ author = "Luiz Yao"
 paginate = 10
 theme = "hugo-clarity"
 
-disqusShortname = "luizyao"
+# disqusShortname = "luizyao"
 
 DefaultContentLanguage = "zh-cn"
 hasCJKLanguage = true

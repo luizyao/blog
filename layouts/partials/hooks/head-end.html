@@ -1,0 +1,17 @@
+<script>
+  var remark_config = {
+    host: "https://luizyao.com/comments",
+    site_id: "blog",
+    components: ["embed", "last-comments"],
+    locale: 'zh',
+  };
+
+  (function(c) {
+    for(var i = 0; i < c.length; i++){
+      var d = document, s = d.createElement('script');
+      s.src = remark_config.host + '/web/' +c[i] +'.js';
+      s.defer = true;
+      (d.head || d.body).appendChild(s);
+    }
+  })(remark_config.components || ['embed']);
+</script>
