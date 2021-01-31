@@ -1,9 +1,9 @@
 ---
-title: "速度对比测试：puppeteer vs playwright vs selenium"
+title: "速度测试：playwright vs playwright-python"
 date: 2021-01-22
-summary: ""
-featured: false
-draft: true 
+summary: "本文测试了 playwright（node.js）和 playwright-python 在执行速度上的差异。"
+featured: true
+draft: false 
 toc: true
 featureImage: ""
 thumbnail: ""
@@ -11,38 +11,13 @@ shareImage: ""
 categories:
   - "笔记"
 tags:
-  - "puppeteer"
   - "playwright"
-  - "selenium"
   - "基准测试"
 ---
 
-直观感觉上很容易发现 puppeteer 和 playwright 的执行速度比 selenium 快，但是始终缺少一个量化的对比，并且我对 puppeteer 和 playwright 之间的对决也比较感兴趣。
+最近在网络上看到一篇文章：[puppeteer vs selenium vs playwright, a speed comparison](https://blog.checklyhq.com/puppeteer-vs-selenium-vs-playwright-speed-comparison/)，作者是 [Checkly 团队](https://www.checklyhq.com/), 他们对 puppeteer、playwright 和 selenium 的执行速度做了量化的比较，得出的结论是 puppeteer 和 playwright 比 selenium 快了大概 20% 左右，有兴趣的同学可以看看。
 
-最近在网络上看到一篇文章：[puppeteer vs selenium vs playwright, a speed comparison](https://blog.checklyhq.com/puppeteer-vs-selenium-vs-playwright-speed-comparison/)，作者是 [Checkly 团队](https://www.checklyhq.com/), 他们对 puppeteer、playwright 和 selenium 的执行速度做了相对必要的测试。
-
-我在自己的设备上做了类似的测试，有些结论不太一样，大家可以和原文对照阅读。
-
-<!--more-->
-
-不可避免的，我的测试条件和原文有所不同：
-
-1. 执行测试的设备不同，原文是在一台 MacBook Pro 上执行的测试，我的是一台 MacBook Air；
-2. 脚本测试的网站不同，原文访问的是国外的一个网站，为了避免网络延迟带来的影响，我访问的是自己内网[搭建的 pi-hole 服务](/blog/post/2020-12-06-pi-hole-getting-started-on-raspberry-pi)；
-3. 依赖库使用的截止到目前最新的版本；
-4. 我还额外测试了 playwright-python 工具。
-
-> playwright-python 是 playwright 的官方 python 版本，和 playwright 一样都是由微软团队维护。
->
-
-## 测试对象
-
-- [puppeteer](https://github.com/puppeteer/puppeteer)
-- [playwright](https://github.com/microsoft/playwright)
-- WebDriverIO-selenium（[WebDriver 协议](https://webdriver.io/docs/automationProtocols.html#webdriver-protocol)）
-- WebDriverIO-DevTools（[DevTools 协议](https://webdriver.io/docs/automationProtocols.html#devtools-protocol)）
-
-> [WebDriverIO](https://webdriver.io/) 是一个 Node.js 的自动化测试框架，适用于浏览器和移动端。
+受此启发，我对 [playwright](https://github.com/microsoft/playwright) 和 [playwright-python](https://github.com/microsoft/playwright-python) 也做了同样的测试。playwright 是微软开源的浏览器自动化操作的 node.js 库，playwright-python 是它对应的官方 python 版本。
 
 ## 测试方法
 
@@ -54,8 +29,8 @@ tags:
 
 1. **资源平等**：每个测试都是在同一台“静止的”机器上依次执行的，也就是说，在测试期间，后台没有发生繁重的工作负载。
 2. **简单执行**：脚本的执行方式如每个工具的“入门”文档所示。例如：playwright 的 `node script.js`，并且尽量使用默认的命令行选项。
-3. **相似的脚本**：尽量减小测试中不同工具之间编写脚本的差异。尽管如此，为了脚本稳定地执行，仍然需要添加、减少或者调整一些必要的指令。
-4. **最新版本**：测试对象都使用目前为止最新发布的版本。
+3. **相似的脚本**：尽量减小测试中不同工具之间编写脚本的差异。
+4. **最新版本**：测试对象都使用目前为止发布的最新版本。
 5. **相同的浏览器**：所有的脚本都在无头模式的 Chromium 浏览器上执行。
 
 所有条件的细节，请参阅下一节。
@@ -63,6 +38,11 @@ tags:
 ### 测试参数
 
 每个测试脚本都**成功的连续执行1000次**。
+
+测试对象的版本信息如下：
+
+- playwright：1.8.0
+- playwright-python：1.8.0a1
 
 ### 衡量指标
 
@@ -82,35 +62,43 @@ tags:
 
 ## 测试结果
 
-下面，你会看到本次测试的汇总结果。
+为了避免网络延迟带来的影响，脚本操作的是我之前在[本地的树莓派上搭建的 pihole 服务](https://luizyao.com/blog/post/2020-12-06-pi-hole-getting-started-on-raspberry-pi/)。
 
 ### 简单的场景
 
-在这个场景中，脚本简单的执行一个 pi-hole 的快速登录操作，预计只需要几秒钟，这可以明显的区分出测试对象启动速度之间的差异。
+在这个场景中，脚本执行一个 pi-hole 的快速登录操作，预计只需要几秒钟，这可以明显的区分出测试对象启动速度之间的差异。
 
 以下是我们的汇总测试结果：
 
-![登录 pihole 的测试结果](https://gitee.com/luizyao/pictures/raw/master/img/image-20210128214849972.png)
+![登录 pihole 的测试结果](https://gitee.com/luizyao/pictures/raw/master/img/image-20210131120758542.png)
 
-原文结论 puppeteer 比 playwright 有接近 30% 的速度优势，而在我这里 **puppeteer 和 playwright 的速度相差无几，前者只是比后者有些微的优势（3%左右）**。
+在这种场景下，playwright 比 playwright-python 的速度快了20%以上，但是 playwright-python 拥有更低的离散度和变异性。
 
-![login pihole: playwright vs puppeteer](https://gitee.com/luizyao/pictures/raw/master/img/pihole-login-playwright-vs-puppeteer.png)
-
-但是，playwright 比 playwright-python 有着接近 30% 的速度优势，不过 playwright-python 有着更低的变异性。
-
-![login pihole: playwright vs playwright-python](https://gitee.com/luizyao/pictures/raw/master/img/pihole-login-playwright-vs-playwright-python.png)
-
-puppeteer 和 playwright 比 selenium（wdio-selenium） 均有着 40% 以上的速度优势。但是，对于 WebDriverIO 测试框架，选择那种协议（WebDriver 协议或者 DevTools 协议）对执行时间并不会产生过多的影响。
-
-![login pihole: playwright vs wdio-selenium vs wdio-devtools](https://gitee.com/luizyao/pictures/raw/master/img/pihole-login-playwright-wdio-selenium-vs-devtools.png)
-
-直接使用 puppeteer 比封装了一层测试框架的 wdio-DevTools 有着明显的速度优势。
-
-![login pihole: puppeteer vs wdio-devtools](https://gitee.com/luizyao/pictures/raw/master/img/pihole-login-puppeteer-vs-wdio-devtools.png)
-
-> wdio-DevTools 对于 chrome 浏览器使用的也是 puppeteer。
+![login pihole: playwright vs playwright-python](https://gitee.com/luizyao/pictures/raw/master/img/login-results.png)
 
 ### 复杂的场景
 
-在这个场景中，脚本登录 pihole，并添加一个白名单和黑名单，然后再删除它们。
+在这个场景中，我们登录 pihole 添加一个黑名单和白名单，然后再删除它们。我们来看看在这种稍微复杂的场景中，是否还能得到上面的结论。
+
+以下是我们的汇总测试结果：
+
+![管理 pinhole 的测试结果](https://gitee.com/luizyao/pictures/raw/master/img/image-20210131121938057.png)
+
+这里 playwright 相对于 playwright-python 的速度优势降到了10%左右，但同时它们的离散度和差异性趋于重合。
+
+![manage pihole: playwright vs playwright-python](https://gitee.com/luizyao/pictures/raw/master/img/manage-results.png)
+
+## 结论
+
+playwright 确实相对于 playwright-python 有执行速度上的优势，在一些脚本操作简单，执行时间短的场景中有20%以上的优势，但是对于一些复杂的、执行时间较长的场景，优势大概在10%左右。
+
+其实，不管是对于 playwright、puppeteer 还是 selenium，速度永远都不是在选择工具时的第一考虑要素，更要考虑到自身的需求、脚本开发的效率等等。
+
+**以上结论仅供参考**。
+
+## 其它
+
+本文所有的测试脚本、测试结果都可以在这个[仓库](https://github.com/luizyao/headless-benchmarks)中找到，包括自动计算结果，并生成本文所有表格、图片的一个脚本，在写这个脚本的时候，还发现了 rich 的一个 [BUG](https://github.com/willmcgugan/rich/issues/953)，也算是一个意外的收获吧。
+
+> [rich](https://github.com/willmcgugan/rich) 是一个 python 库，能够在终端打印漂亮的输出，Github 上超过2万 star，有兴趣的可以试试。
 
