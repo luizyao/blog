@@ -12,6 +12,8 @@ on:
       - LICENSE
       - .gitignore
       - .editorconfig
+  pull_request:
+    branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,18 +26,18 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.0.0
         with:
           submodules: true
           fetch-depth: 0
 
       - name: build and deploy
-        uses: shalzz/zola-deploy-action@v0.13.0
+        uses: shalzz/zola-deploy-action@master
         env:
           # Target branch
           PAGES_BRANCH: gh-pages
           # Provide personal access token
-          TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
 
       - name: Update on server
         uses: appleboy/ssh-action@master
