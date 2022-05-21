@@ -47,8 +47,6 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /usr/local/nginx/html/luizyao.com/
-            # Delete the original files
-            git rm -r -f .
-            git reset --hard origin/gh-pages
-            git pull
+            cd /usr/local/nginx/html/
+            rm -rf luizyao.com/
+            git clone -b gh-pages https://github.com/luizyao/blog.git luizyao.com
