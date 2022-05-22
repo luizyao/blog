@@ -28,6 +28,8 @@ highlight_theme = "monokai"
 # Put all your custom variables here
 even_title = "小鹿的先森"
 
+author = "Luiz Yao"
+
 even_menu = [
     # {url = "$BASE_URL", name = "Home"},
     {url = "$BASE_URL/categories", name = "归档"},
