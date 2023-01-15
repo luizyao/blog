@@ -38,15 +38,3 @@ jobs:
           PAGES_BRANCH: gh-pages
           # Provide personal access token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Update on server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
-          script: |
-            cd /usr/local/nginx/html/
-            rm -rf luizyao.com/
-            git clone -b gh-pages https://github.com/luizyao/blog.git luizyao.com
