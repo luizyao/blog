@@ -24,13 +24,13 @@ taxonomies = [
 # Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
 highlight_code = true
 
-highlight_theme = "monokai"
+highlight_theme = "base16-ocean-dark"
 
 [extra]
 # Put all your custom variables here
 even_title = "小鹿的先森"
 
-author = "Luiz Yao"
+author = "Yao Meng"
 
 even_menu = [
     # {url = "$BASE_URL", name = "Home"},
