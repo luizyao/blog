@@ -35,7 +35,7 @@ target = decorate(target)
 
 但是，它们返回的 `target` 不一定是原来的那个 `target` 函数，例如下面这个例子：
 
-```bash
+```txt
 >>> def deco(func):
 ...     def inner():
 ...         print('running inner()')
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
 现在我们在命令行执行这个脚本：
 
-```bash
+```txt
 $ python registration.py
 注册函数 -> <function f1 at 0x000001F6FC8320D0>
 注册函数 -> <function f2 at 0x000001F6FC832160>
@@ -137,7 +137,7 @@ registry ->  [<function f1 at 0x000001F6FC8320D0>, <function f2 at 0x000001F6FC8
 
 我们来看下面这个例子，一个函数读取一个局部变量 `a`，一个全局变量 `b`。
 
-```bash
+```txt
 >>> def f1(a):
 ...     print(a)
 ...     print(b)
@@ -161,7 +161,7 @@ NameError: name 'b' is not defined
 
 现在，我们来看一个不寻常的例子：
 
-```bash
+```txt
 >>> b = 1
 >>> def f2(a):
 ...     print(a)
@@ -182,7 +182,7 @@ UnboundLocalError: local variable 'b' referenced before assignment
 
 如果想把上述示例中的 `b` 看成全局变量，则需要使用 `global` 声明：
 
-```bash
+```txt
 >>> b = 1
 >>> def f3(a):
 ...     global b
@@ -245,7 +245,7 @@ class Averager:
 
 也可以使用一个函数来实现：
 
-```bash
+```txt
 >>> def make_averager():
 ...     serial = []
 ...     def averager(price):
@@ -272,7 +272,7 @@ class Averager:
 
 我们可以在 `averager` 返回对象的 `__code__` 属性中查看它的局部变量和自由变量的名字。
 
-```bash
+```txt
 >>> avg.__code__.co_varnames
 ('price',)
 >>> avg.__code__.co_freevars
@@ -281,7 +281,7 @@ class Averager:
 
 自由变量 `serial` 绑定的值存放在 `avg` 对象的 `__closure__` 属性中，它是一个元组，里面的元素是 `cell` 对象，它的 `cell_contents` 属性保存实际的值：
 
-```bash
+```txt
 >>> avg.__closure__
 (<cell at 0x000002266FF99430: list object at 0x00000226702841C0>,)
 >>> avg.__closure__[0].cell_contents
@@ -298,7 +298,7 @@ class Averager:
 
 前面的 `make_averager` 方法的效率并不高，我们可以只保存当前的总值和元素个数，再使用它们计算平均值。下面是我们更改后的函数体：
 
-```bash
+```txt
 >>> def make_averager():
 ...     count = total = 0
 ...     def averager(price):
@@ -310,7 +310,7 @@ class Averager:
 
 但是这个写法实际上是有问题的，我们先运行再分析：
 
-```bash
+```txt
 >>> avg = make_averager()
 >>> avg(10)
 Traceback (most recent call last):
@@ -323,7 +323,7 @@ UnboundLocalError: local variable 'count' referenced before assignment
 
 为了解决这个问题，python 引入了 `nonlocal` 关键字，用于声明自由变量。使用 `nonlocal` 修改上述的例子：
 
-```bash
+```txt
 >>> def make_averager():
 ...     count = total = 0
 ...     def averager(price):
@@ -398,7 +398,7 @@ def f2():
 
 现在我们导入这个模块：
 
-```bash
+```txt
 >>> import registration
 注册函数 -> <function f1 at 0x0000016D80402280>
 ```
@@ -428,7 +428,7 @@ def clock(func):
 
 下面我们来试试这个装饰器：
 
-```bash
+```txt
 >>> @clock
 ... def factorial(n):
 ...     # 计算 n 的阶乘
@@ -446,7 +446,7 @@ def clock(func):
 
 具体来分析一下，这里 `factorial` 作为 `func` 参数传递给 `clock` 函数，然后 `clock` 函数返回 `clocked` 函数，Python 解释器会把 `clocked` 赋值给 `factorial`。所以，如果我们查看 `factorial` 的 `__name__` 属性，会发现它的值是 `clocked` 而不是 `factorial`。
 
-```bash
+```txt
 >>> factorial.__name__
 'clocked'
 ```
@@ -455,7 +455,7 @@ def clock(func):
 
 我们也可以使用 `functools.wraps` 装饰器把 `func` 的一些属性复制到 `clocked` 函数上，例如：`__name__` 和 `__doc__`：
 
-```bash
+```txt
 def clock(func):
     @functools.wraps(func)
     def clocked(*args):
@@ -487,7 +487,7 @@ def clock(func):
 
 我们来看看不使用 `lru_cache` 时的情况：
 
-```bash
+```txt
 >>> @clock
 ... def fibonacci(n):
 ...     return n if n < 2 else fibonacci(n - 2) + fibonacci(n - 1)
@@ -525,7 +525,7 @@ def clock(func):
 
 现在我们使用 `functools.lru_cache` 优化一下：
 
-```bash
+```txt
 >>> @functools.lru_cache
 ... @clock
 ... def fibonacci(n):
