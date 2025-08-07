@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>Luiz&#x27;s Blog - Unicode 标准及其常见的编码方案</title>
+
+      
+
+      
+          <!-- <script type="text/javascript" src="https://luizyao.github.io/blog/slideout.min.js" ></script> -->
+          <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/index.min.js"></script>
+          
+          <!-- <script type="text/javascript" src="https://luizyao.github.io/blog/Valine.min.js" ></script> -->
+          <script src="https://cdn.jsdelivr.net/npm/valine@1.4.18/dist/Valine.min.js" integrity="sha256-nPUdUfwNm4YBBhEYBxrSbW5DmfVODKCzs0nAp1Z3RnM=" crossorigin="anonymous"></script>
+          
+          
+      
+
+      
+          <link rel="stylesheet" href="https://luizyao.github.io/blog/site.css">
+          
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">Luiz&#x27;s Blog</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;categories">
+                            归档
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;tags">
+                            标签
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;">Luiz&#x27;s Blog</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;categories">
+                                    归档
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;tags">
+                                    标签
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+<div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">目录</h2>
+    <div class="post-toc-content always-active">
+        <nav id="TableOfContents">
+            <ul>
+                
+                <li>
+                    <a href="#ji-ben-gai-nian" class="toc-link">基本概念</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="#ma-wei" class="toc-link">码位</a>
+                    
+                    <ul>
+                        
+                        <li>
+                            <a href="#ma-wei-de-lei-xing" class="toc-link">码位的类型</a>
+                        </li>
+                        
+                    </ul>
+                    
+                </li>
+                
+                <li>
+                    <a href="#bian-ma-fang-an" class="toc-link">编码方案</a>
+                    
+                    <ul>
+                        
+                        <li>
+                            <a href="#utf-32" class="toc-link">UTF-32</a>
+                        </li>
+                        
+                        <li>
+                            <a href="#utf-16" class="toc-link">UTF-16</a>
+                        </li>
+                        
+                        <li>
+                            <a href="#utf-8" class="toc-link">UTF-8</a>
+                        </li>
+                        
+                    </ul>
+                    
+                </li>
+                
+                <li>
+                    <a href="#unicode-dai-lai-de-wen-ti" class="toc-link">Unicode 带来的问题</a>
+                    
+                    <ul>
+                        
+                        <li>
+                            <a href="#bi-jiao" class="toc-link">比较</a>
+                        </li>
+                        
+                    </ul>
+                    
+                </li>
+                
+                <li>
+                    <a href="#can-kao-zi-liao" class="toc-link">参考资料</a>
+                    
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;unicode-standard-and-encoding&#x2F;">Unicode 标准及其常见的编码方案</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2020-07-26</span>
+            
+            
+                <div class="post__category">
+                    
+                        <a href="https://luizyao.github.io/blog/categories/qi-ta/">#其它</a>
+                    
+                </div>
+            
+            
+                <span class="post__category leancloud_visitors" id="/blog/unicode-standard-and-encoding/" data-flag-title="Unicode 标准及其常见的编码方案">
+                    <em class="post-meta-item-text"  style="font-style: normal;">· 阅读量 </em>
+                    <i class="leancloud-visitors-count"  style="font-style: normal;">1000000</i>
+                </span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <p>Unicode 标准为每一个字符提供一个唯一的数字，而不用区分平台、语言等因素。</p>
+<span id="continue-reading"></span>
+<blockquote>
+<p>The Unicode Standard provides a unique number for every character, no matter what platform, device, application or language.</p>
+</blockquote>
+<h2 id="ji-ben-gai-nian">基本概念</h2>
+<p>在开始学习之前，我们需要先了解本文所涉及到的一些基本概念。</p>
+<p><strong>抽象字符（Abstract character）</strong>：用于组织、控制或者表示文本数据的信息单元。</p>
+<ul>
+<li>抽象字符没有具体的形式，不应与<a href="http://unicode.org/glossary/#glyph">图像字符（glyph）</a>混淆。</li>
+<li>抽象字符不一定对应于人们所认知的“字”，不应与<a href="http://unicode.org/glossary/#grapheme">字素（grapheme）</a>混淆。</li>
+<li>不能被 Unicode 标准直接编码的抽象字符通常可以通过组合字符序列来表示。</li>
+</ul>
+<p><strong>抽象字符序列（Abstract character sequence）</strong>：一个或多个抽象字符的有序序列。</p>
+<p><strong>Unicode 编码空间（Unicode codespace）</strong>：十六进制 0x0～0x10FFFF 之间的整数。</p>
+<p><strong>码位（Code point）</strong>：Unicode 编码空间中的任意值。</p>
+<p><strong>编码字符（Coded character）</strong>：当抽象字符被映射或者分配到编码空间中特定的码位时，它就被称为编码字符。</p>
+<h2 id="ma-wei">码位</h2>
+<p>码位是 Unicode 标准中很重要的一个概念。它的取值范围是十六进制的<code>0x0～0x10FFFF</code>，换算成十进制是 0～1114111，共计 1114112 个。</p>
+<p>需要注意的是，一个单一的抽象字符可能对应一个以上的码位。例如，<code>Ω</code>既可以表示大写的希腊字母 Omega，码位是<code>U+03A9</code>，也可以表示物理学中的欧姆符号，码位是<code>U+2126</code>。</p>
+<pre data-lang="txt" style="background-color:#282a36;color:#f8f8f2;" class="language-txt "><code class="language-txt" data-lang="txt"><span>&gt;&gt;&gt; &#39;\u03a9&#39;
+</span><span>&#39;Ω&#39;
+</span><span>&gt;&gt;&gt; &#39;\u2126&#39;
+</span><span>&#39;Ω&#39;
+</span></code></pre>
+<p>单个抽象字符也可以由一系列码位的序列来表示。例如，<code>é</code>的码位是<code>U+00E9</code>，它也可以由小写字母<code>e</code>（码位为<code>U+0065</code>）和<code> ́</code>（<em>Combining Acute Accent</em>）（码位为<code>U+0301</code>）组合而成。</p>
+<pre data-lang="txt" style="background-color:#282a36;color:#f8f8f2;" class="language-txt "><code class="language-txt" data-lang="txt"><span>&gt;&gt;&gt; &#39;\u00e9&#39;
+</span><span>&#39;é&#39;
+</span><span>&gt;&gt;&gt; &#39;\u0065\u0301&#39;
+</span><span>&#39;é&#39;
+</span></code></pre>
+<p>在 Unicode 标准中，码位的表示方法通常是使用它们的十六进制，并加上<code>U+</code>前缀。</p>
+<h3 id="ma-wei-de-lei-xing">码位的类型</h3>
+<p>码位的分类方法多种多样。我们通过下表来阐明 Unicode 标准使用的七种类型和一些术语。</p>
+<table><thead><tr><th>基本类型</th><th>简要描述</th><th>是否分配给抽象字符</th><th>码位范围</th></tr></thead><tbody>
+<tr><td>图形（Graphic）</td><td>字母、标记、数字、标点符号、符号和空格</td><td>是</td><td></td></tr>
+<tr><td>格式（Format）</td><td>不可见但是影响相邻字符。包括行、段落分割符</td><td>是</td><td></td></tr>
+<tr><td>控制（Control）</td><td>Unicode 标准以外的协议或标准定义的用法</td><td>是</td><td>U+0000～U+001F，U+007F，U+0080～U+009F，共计 65 个</td></tr>
+<tr><td>私用（Private-use）</td><td>Unicode 标准以外的私有协议定义的用法</td><td>是</td><td></td></tr>
+<tr><td>代理 (Surrogate)</td><td>永久预留给 UTF-16 编码方案</td><td>不允许分配</td><td>U+D800～U+DFFF，共计 2048 个</td></tr>
+<tr><td>非字符（Noncharacter）</td><td>永久预留给内部使用</td><td>否</td><td>U+FDD0～U+FDEF，所有以 FFFE 或者 FFFF 结尾的码位，共计 66 个</td></tr>
+<tr><td>保留（Reserved）</td><td>预留给将来使用</td><td>否</td><td></td></tr>
+</tbody></table>
+<p>我们需要格外注意代理（Surrogate）类型，理解他有助于我们学习 UTF-16。它总共包含 2048 个码位，码位空间为 U+D800～U+DFFF。它又引发出两个新的概念：</p>
+<p><strong>高位代理（High-Surrogate）</strong>：U+D800～U+DBFF 范围内的码位，共计 1024 个。</p>
+<p><strong>低位代理（Low-Surrogate）</strong>：U+DC00～U+DFFF 范围内的码位，共计 1024 个。</p>
+<p>关于它们更多的内容，稍后结合 UTF-16 再讨论。</p>
+<h2 id="bian-ma-fang-an">编码方案</h2>
+<p>在介绍具体的编码方案之前，我们先明确一些新的基本概念。</p>
+<p><strong>Unicode 标量值（Unicode scalar value）</strong>：除去高位代理和低位代理之外，所有的 Unicode 码位，也就是 U+0000～U+D7FF 和 U+E000～U+10FFFF 范围内的码位。</p>
+<p><strong>编码单元（Code unit）</strong>：最小的比特位组合，表示用于交换或处理的编码文本单元。Unicode 标准中定义，UTF-8 使用 8 比特的编码单元，UTF-16 使用 16 比特的编码单元，UTF-32 使用 32 比特的编码单元。</p>
+<p><strong>编码单元序列（Code unit sequence）</strong>：一个或多个编码单元的有序序列。</p>
+<h3 id="utf-32">UTF-32</h3>
+<p>UTF-32 将每个 Unicode 标量值映射成一个无符号的 32 比特的编码单元，数值与 Unicode 标量值相同，这是一种定长的编码方案。</p>
+<p>注意，UTF-32 无法编码 U+D800～U+DFFF 之间的码位，因为它们不属于 Unicode 标量值。</p>
+<pre data-lang="txt" style="background-color:#282a36;color:#f8f8f2;" class="language-txt "><code class="language-txt" data-lang="txt"><span>&gt;&gt;&gt; &#39;\ud800&#39;.encode(&#39;utf32&#39;)
+</span><span>Traceback (most recent call last):
+</span><span>  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+</span><span>UnicodeEncodeError: &#39;utf-32&#39; codec can&#39;t encode character &#39;\ud800&#39; in position 0: surrogates not allowed
+</span></code></pre>
+<h3 id="utf-16">UTF-16</h3>
+<p>UTF-16 将 Unicode 标量值中<code>U+0000～U+D7FF</code>和<code>U+E000～U+FFFF</code>范围内的码位映射成一个无符号的 16 比特的编码单元，数值与 Unicode 标量值相同。将<code>U+10000～U+10FFFF</code>范围内的码位映射成一个代理对，所谓的代理对就是上文提到的高位代理和低位代理。UTF-16 是一种定长和变长兼顾的编码方案。</p>
+<p>下表阐明了 UTF-16 的编码方式。</p>
+<table><thead><tr><th>Unicode 标量值</th><th>UTF-16</th></tr></thead><tbody>
+<tr><td>xxxx xxxx xxxx xxxx</td><td>xxxx xxxx xxxx xxxx</td></tr>
+<tr><td>000u uuuu xxxx xxxx xxxx xxxx</td><td>1101 10ww wwxx xxxx 1101 11xx xxxx xxxx</td></tr>
+</tbody></table>
+<blockquote>
+<p>其中， wwww = uuuuu - 1</p>
+</blockquote>
+<p>重点分析使用代理对的情况，一个代理对包含一个高位代理编码单元和一个低位代理编码单元，都是 16 比特的。其中高位代理的范围是 U+D800～U+DBFF，转换成二进制，它的格式应该是 1101 10xx xxxx xxxx，低位代理的范围是 U+DC00～U+DFFF，转换成二进制，它的格式应该是 1101 11xx xxxx xxxx。</p>
+<p>至此，我们还剩下 20 位可以填充。我们将码位减去 U+10000，再从右到左依次填充进去，就能得到 UTF-16 的编码。</p>
+<p>以字符<code>𐌂</code>（<em>Old Italic Letter Ke</em>）为例，它的码位是 U+10302，二进制表示是 0000 0001 0000 0011 0000 0010，减去 U+10000（二进制为 0000 0001 0000 0000 0000 0000），得到 0000 0000 0000 0011 0000 0010。从右到左填充进模版，得到 1101 1000 0000 0000 1101 1111 0000 0010，对应的十六进制是 D800 DF02。</p>
+<pre data-lang="txt" style="background-color:#282a36;color:#f8f8f2;" class="language-txt "><code class="language-txt" data-lang="txt"><span>&gt;&gt;&gt; &#39;𐌂&#39;.encode(&#39;utf-16be&#39;)
+</span><span>b&#39;\xd8\x00\xdf\x02&#39;
+</span></code></pre>
+<h3 id="utf-8">UTF-8</h3>
+<p>UTF-8 将每个 Unicode 标量值映射成一到四个无符号的 8 比特的编码单元，这是一种变长的编码方案。</p>
+<p>下表阐明了 UTF-8 的编码方式。</p>
+<table><thead><tr><th>Unicode 标量值</th><th>第一个字节</th><th>第二个字节</th><th>第三个字节</th><th>第四个字节</th></tr></thead><tbody>
+<tr><td>00000000 0xxxxxxx</td><td>0xxxxxxx</td><td></td><td></td><td></td></tr>
+<tr><td>00000yyy yyxxxxxx</td><td>110yyyyy</td><td>10xxxxxx</td><td></td><td></td></tr>
+<tr><td>zzzzyyyy yyxxxxxx</td><td>1110zzzz</td><td>10yyyyyy</td><td>10xxxxxx</td><td></td></tr>
+<tr><td>000uuuuu zzzzyyyy yyxxxxxx</td><td>11110uuu</td><td>10uuzzzz</td><td>10yyyyyy</td><td>10xxxxxx</td></tr>
+</tbody></table>
+<p>仍然以字符<code>𐌂</code>（<em>Old Italic Letter Ke</em>）为例，它的码位是 U+10302，二进制表示是 00000001 00000011 00000010，套用表中的模式，得到 11110000 10010000 10001100 10000010，对应的十六进制是 F090 8C82。</p>
+<pre data-lang="txt" style="background-color:#282a36;color:#f8f8f2;" class="language-txt "><code class="language-txt" data-lang="txt"><span>&gt;&gt;&gt; &#39;𐌂&#39;.encode(&#39;utf-8&#39;)
+</span><span>b&#39;\xf0\x90\x8c\x82&#39;
+</span></code></pre>
+<p>下表阐明了 UTF-8 的所有有效编码范围。</p>
+<table><thead><tr><th>Unicode 标量值范围</th><th>第一个字节</th><th>第二个字节</th><th>第三个字节</th><th>第四个字节</th></tr></thead><tbody>
+<tr><td>U+0000～U+007F</td><td>00～7F</td><td></td><td></td><td></td></tr>
+<tr><td>U+0080～U+07FF</td><td>C2～DF</td><td>80～BF</td><td></td><td></td></tr>
+<tr><td>U+0800～U+0FFF</td><td>E0</td><td>A0～BF</td><td>80～BF</td><td></td></tr>
+<tr><td>U+1000～U+CFFF</td><td>E1～EC</td><td>80～BF</td><td>80～BF</td><td></td></tr>
+<tr><td>U+D000～U+D7FF</td><td>ED</td><td>80～9F</td><td>80～BF</td><td></td></tr>
+<tr><td>U+E000～U+FFFF</td><td>EE～EF</td><td>80～BF</td><td>80～BF</td><td></td></tr>
+<tr><td>U+10000～U+3FFFF</td><td>F0</td><td>90～BF</td><td>80～BF</td><td>80～BF</td></tr>
+<tr><td>U+40000～U+FFFFF</td><td>F1～F3</td><td>80～BF</td><td>80～BF</td><td>80～BF</td></tr>
+<tr><td>U+100000～U+10FFFF</td><td>F4</td><td>80～8F</td><td>80～BF</td><td>80～BF</td></tr>
+</tbody></table>
+<h2 id="unicode-dai-lai-de-wen-ti">Unicode 带来的问题</h2>
+<h3 id="bi-jiao">比较</h3>
+<p>Unicode 标准可能会导致两个或者多个字符存在等价的现象。</p>
+<pre data-lang="txt" style="background-color:#282a36;color:#f8f8f2;" class="language-txt "><code class="language-txt" data-lang="txt"><span>&gt;&gt;&gt; c1 = &#39;e\u0301&#39;
+</span><span>&gt;&gt;&gt; c2 = &#39;\u00e9&#39;
+</span><span>&gt;&gt;&gt; c1
+</span><span>&#39;é&#39;
+</span><span>&gt;&gt;&gt; c2
+</span><span>&#39;é&#39;
+</span><span>&gt;&gt;&gt; len(c1)
+</span><span>2
+</span><span>&gt;&gt;&gt; len(c2)
+</span><span>1
+</span><span>&gt;&gt;&gt; c1 == c2
+</span><span>False
+</span></code></pre>
+<p>上例中，c1 和 c2 是两个不同的 Unicode 字符序列，但是它们显示的都是<code>é</code>，实际应用中也应该将它们视为相同的字符，称之为<strong>标准等价物</strong>（<em>canonical equivalent</em>），但是在 Python 中它们并不相等。</p>
+<p>解决这个问题的做法，通常是通过规范化 Unicode 字符串。在 Python 中，我们使用<code>unicodedata.normalize</code>函数：</p>
+<pre data-lang="txt" style="background-color:#282a36;color:#f8f8f2;" class="language-txt "><code class="language-txt" data-lang="txt"><span>&gt;&gt;&gt; from unicodedata import normalize
+</span><span>&gt;&gt;&gt; c1 = &#39;e\u0301&#39;
+</span><span>&gt;&gt;&gt; c1
+</span><span>&#39;é&#39;
+</span><span>&gt;&gt;&gt; c2 = &#39;\u00e9&#39;
+</span><span>&gt;&gt;&gt; c2
+</span><span>&#39;é&#39;
+</span><span>&gt;&gt;&gt; len(c1), len(c2)
+</span><span>(2, 1)
+</span><span>&gt;&gt;&gt; len(normalize(&#39;NFC&#39;, c1)), len(normalize(&#39;NFC&#39;, c2))
+</span><span>(1, 1)
+</span><span>&gt;&gt;&gt; len(normalize(&#39;NFD&#39;, c1)), len(normalize(&#39;NFD&#39;, c2))
+</span><span>(2, 2)
+</span><span>&gt;&gt;&gt; normalize(&#39;NFC&#39;, c1) == c2
+</span><span>True
+</span><span>&gt;&gt;&gt; c1 == normalize(&#39;NFD&#39;, c2)
+</span><span>True
+</span></code></pre>
+<p>normalize 函数的第一个参数可以是 NFC、NFD、NFKC 和 NFKD，我们重点看一下 NFC 和 NFD。</p>
+<p><strong>NFD（Normalization Form D）</strong>：把每个字符转换成其分解的形式，也称之为规范分解。</p>
+<p><strong>NFC（Normalization Form C）</strong>：先应用 NFD，再合成预先组合的形式。</p>
+<h2 id="can-kao-zi-liao">参考资料</h2>
+<ol>
+<li>UnicodeStandard-12.0：<a href="https://www.unicode.org/versions/Unicode12.1.0/">https://www.unicode.org/versions/Unicode12.1.0/</a></li>
+<li>unicodedata.normalize：<a href="https://docs.python.org/3/library/unicodedata.html?highlight=unicodedata#unicodedata.normalize">https://docs.python.org/3/library/unicodedata.html?highlight=unicodedata#unicodedata.normalize</a></li>
+</ol>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https://luizyao.github.io/blog/tags/unicode/">#unicode</a>
+                    
+                </div>
+            
+            
+
+        
+
+    </div>
+
+    <div class="post-footer">
+    
+    
+    </div>
+
+    
+        <div id="vcomments"></div>
+        <script>
+            new Valine({
+                el: '#vcomments',
+                appId: 'ELAxhd0CdYZzYItFv1aOgfkU-gzGzoHsz',
+                appKey: 'Dn5ewE2hhnJwQXe1LsucljYV',
+                visitor: true // 阅读量统计
+            })
+        </script>
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            <div style="text-align: center;">
+                <span class="author">
+                    © 2020-2025 Luiz Yao
+                </span>
+                 &nbsp;|&nbsp;
+                <span class="license">
+                    <a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh-Hans" target="_blank">CC BY-NC 4.0</a>
+                </span>
+            </div>
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https://luizyao.github.io/blog/even.js" ></script>
+      
+    </body>
+
+</html>

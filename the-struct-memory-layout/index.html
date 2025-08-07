@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>Luiz&#x27;s Blog - C 语言中结构体的内存布局</title>
+
+      
+
+      
+          <!-- <script type="text/javascript" src="https://luizyao.github.io/blog/slideout.min.js" ></script> -->
+          <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/index.min.js"></script>
+          
+          <!-- <script type="text/javascript" src="https://luizyao.github.io/blog/Valine.min.js" ></script> -->
+          <script src="https://cdn.jsdelivr.net/npm/valine@1.4.18/dist/Valine.min.js" integrity="sha256-nPUdUfwNm4YBBhEYBxrSbW5DmfVODKCzs0nAp1Z3RnM=" crossorigin="anonymous"></script>
+          
+          
+      
+
+      
+          <link rel="stylesheet" href="https://luizyao.github.io/blog/site.css">
+          
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">Luiz&#x27;s Blog</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;categories">
+                            归档
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;tags">
+                            标签
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;">Luiz&#x27;s Blog</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;categories">
+                                    归档
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;tags">
+                                    标签
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+<div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">目录</h2>
+    <div class="post-toc-content always-active">
+        <nav id="TableOfContents">
+            <ul>
+                
+                <li>
+                    <a href="#jie-gou-ti-de-yi-ban-bu-ju" class="toc-link">结构体的一般布局</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="#you-hua-nei-cun-bu-ju" class="toc-link">优化内存布局</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="#pragma-pack-zhi-ling" class="toc-link">#pragma pack 指令</a>
+                    
+                    <ul>
+                        
+                        <li>
+                            <a href="#attribute-ji-zhi" class="toc-link">__attribute__ 机制</a>
+                        </li>
+                        
+                    </ul>
+                    
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;the-struct-memory-layout&#x2F;">C 语言中结构体的内存布局</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2025-08-05</span>
+            
+            
+                <div class="post__category">
+                    
+                        <a href="https://luizyao.github.io/blog/categories/c-c/">#C&#x2F;C++</a>
+                    
+                </div>
+            
+            
+                <span class="post__category leancloud_visitors" id="/blog/the-struct-memory-layout/" data-flag-title="C 语言中结构体的内存布局">
+                    <em class="post-meta-item-text"  style="font-style: normal;">· 阅读量 </em>
+                    <i class="leancloud-visitors-count"  style="font-style: normal;">1000000</i>
+                </span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <p>C 语言中结构体（struct）的内存布局和编译器具体的实现有关，但遵循一般规则：</p>
+<ul>
+<li>结构体中各成员在内存中的存储顺序和它们的声明顺序一致。</li>
+<li>为了提高内存的访问速度，编译器可能会在各成员间添加填充字节（也可能在结构体之后，但不会出现在结构体开始的位置）。</li>
+<li>结构体按照成员的最大内存占用字节数做对齐。</li>
+</ul>
+<span id="continue-reading"></span><h2 id="jie-gou-ti-de-yi-ban-bu-ju">结构体的一般布局</h2>
+<p>C18 标准 <a href="http://www2.open-std.org/JTC1/SC22/WG14/www/docs/n2310.pdf">$6.7.2.1</a> 中一些相关描述：</p>
+<blockquote>
+<p>14 Each non-bit-field member of a structure or union object is aligned in an implementation-defined manner appropriate to its type.</p>
+<p>15 Within a structure object, the non-bit-field members and the units in which bit-fields reside have addresses that increase in the order in which they are declared. A pointer to a structure object, suitably converted, points to its initial member (or if that member is a bit-field, then to the unit in which it resides), and vice versa. There may be unnamed padding within a structure object, but not at its beginning.</p>
+</blockquote>
+<p>以下面的结构体为例：</p>
+<pre data-lang="c" style="background-color:#282a36;color:#f8f8f2;" class="language-c "><code class="language-c" data-lang="c"><span style="font-style:italic;color:#8be9fd;">struct </span><span>foo </span><span style="color:#ffffff;">{
+</span><span>  </span><span style="font-style:italic;color:#8be9fd;">int</span><span> a;
+</span><span>  </span><span style="font-style:italic;color:#8be9fd;">char </span><span style="color:#ff79c6;">*</span><span>b;
+</span><span>  </span><span style="font-style:italic;color:#8be9fd;">char</span><span> c;
+</span><span style="color:#ffffff;">}</span><span>;
+</span></code></pre>
+<p><code>struct foo</code> 包含三个属性，在大多数 64 位的机器上，<code>int</code> 类型占用 4 个字节，<code>char *</code> 类型占用 8 个字节，<code>char</code> 类型占用 1 个字节，共计 13 各字节。在内存中，按照 8 个字节做对齐：</p>
+<ul>
+<li><code>int a</code> 的起始字节位是 <code>0</code>，占用 4 个字节。</li>
+<li>编译器填充 4 个字节。</li>
+<li><code>char *b</code> 的起始字节位是 <code>8</code>，占用 8 个字节。</li>
+<li><code>char c</code> 的起始字节位是 <code>16</code>，占用 1 个字节。</li>
+<li>编译器在最后填充 7 个字节，做对齐。</li>
+</ul>
+<p>实际的内存布局中，共占用 24 个字节。</p>
+<p>可以使用 <a href="https://man7.org/linux/man-pages/man3/offsetof.3.html">offsetof</a> 和 <code>sizeof</code> 验证上述猜想：</p>
+<pre data-lang="c" style="background-color:#282a36;color:#f8f8f2;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#50fa7b;">printf</span><span>(</span><span style="color:#f1fa8c;">&quot;offsets: a=</span><span style="color:#bd93f9;">%zu</span><span style="color:#f1fa8c;">, b=</span><span style="color:#bd93f9;">%zu</span><span style="color:#f1fa8c;">, b=</span><span style="color:#bd93f9;">%zu</span><span style="color:#ff79c6;">\n</span><span style="color:#f1fa8c;">&quot;</span><span>, </span><span style="color:#50fa7b;">offsetof</span><span>(</span><span style="font-style:italic;color:#8be9fd;">struct</span><span> foo, a),
+</span><span>        </span><span style="color:#50fa7b;">offsetof</span><span>(</span><span style="font-style:italic;color:#8be9fd;">struct</span><span> foo, b), </span><span style="color:#50fa7b;">offsetof</span><span>(</span><span style="font-style:italic;color:#8be9fd;">struct</span><span> foo, c));
+</span><span style="color:#50fa7b;">printf</span><span>(</span><span style="color:#f1fa8c;">&quot;sizeof(struct foo)=</span><span style="color:#bd93f9;">%zu</span><span style="color:#ff79c6;">\n</span><span style="color:#f1fa8c;">&quot;</span><span>, </span><span style="color:#ff79c6;">sizeof</span><span>(</span><span style="font-style:italic;color:#8be9fd;">struct</span><span> foo));
+</span></code></pre>
+<p>验证结果：</p>
+<pre data-lang="txt" style="background-color:#282a36;color:#f8f8f2;" class="language-txt "><code class="language-txt" data-lang="txt"><span>offsets: a=0, b=8, b=16
+</span><span>sizeof(struct foo)=24
+</span></code></pre>
+<h2 id="you-hua-nei-cun-bu-ju">优化内存布局</h2>
+<p>结构体在内存中的储存顺序和成员的声明顺序一致，可以通过修改声明顺序，减少内存占用。</p>
+<p>按照成员类型大小升序（降序）排列：</p>
+<pre data-lang="c" style="background-color:#282a36;color:#f8f8f2;" class="language-c "><code class="language-c" data-lang="c"><span style="font-style:italic;color:#8be9fd;">struct </span><span>foo </span><span style="color:#ffffff;">{
+</span><span>  </span><span style="font-style:italic;color:#8be9fd;">char</span><span> a;  </span><span style="color:#6272a4;">// 1 个字节
+</span><span>  </span><span style="font-style:italic;color:#8be9fd;">int</span><span> b;   </span><span style="color:#6272a4;">// 4 个字节
+</span><span>  </span><span style="font-style:italic;color:#8be9fd;">char </span><span style="color:#ff79c6;">*</span><span>c; </span><span style="color:#6272a4;">// 8 个字节
+</span><span style="color:#ffffff;">}</span><span>;
+</span></code></pre>
+<p>这时的内存布局，共占用 16 个字节，比第一种少了 8 个字节：</p>
+<pre data-lang="txt" style="background-color:#282a36;color:#f8f8f2;" class="language-txt "><code class="language-txt" data-lang="txt"><span>offsets: a=0, b=4, b=8
+</span><span>sizeof(struct foo)=16
+</span></code></pre>
+<h2 id="pragma-pack-zhi-ling"><code>#pragma pack</code> 指令</h2>
+<blockquote>
+<p><code>#pragma pack</code> 指令的实现依赖具体的编译器，不同的编译器（GNU、CLANG 等）可能会有稍微的不同。</p>
+<p>这里以 <a href="https://gcc.gnu.org/onlinedocs/gcc-15.1.0/gcc/Structure-Layout-Pragmas.html">GNU 的实现</a>为例，本文使用的 gcc 版本是 <code>gcc version 15.1.1 20250521 (Red Hat 15.1.1-2)</code>。</p>
+</blockquote>
+<ul>
+<li>
+<p><code>#pragma pack(n)</code>：Sets the new alignment according to n.</p>
+<p><code>n</code> 的单位是字节。值必须是 2 的幂，例如：1、2、4、8、16 等。如果为 0，等同于没有使用 <code>#pragma pack</code> 指令。</p>
+</li>
+<li>
+<p><code>#pragma pack(push[,n])</code>：Pushes the current alignment setting on an internal stack and then optionally sets the new alignment.</p>
+</li>
+<li>
+<p><code>#pragma pack(pop)</code>：Restores the alignment setting to the one saved at the top of the internal stack (and removes that stack entry).</p>
+</li>
+</ul>
+<p>仍以上述结构体为例，取消内存对齐：</p>
+<pre data-lang="c" style="background-color:#282a36;color:#f8f8f2;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#ff79c6;">#pragma</span><span> pack(push, 1)
+</span><span style="font-style:italic;color:#8be9fd;">struct </span><span>foo </span><span style="color:#ffffff;">{
+</span><span>  </span><span style="font-style:italic;color:#8be9fd;">int</span><span> a;   </span><span style="color:#6272a4;">// 4 个字节
+</span><span>  </span><span style="font-style:italic;color:#8be9fd;">char </span><span style="color:#ff79c6;">*</span><span>b; </span><span style="color:#6272a4;">// 8 个字节
+</span><span>  </span><span style="font-style:italic;color:#8be9fd;">char</span><span> c;  </span><span style="color:#6272a4;">// 1 个字节
+</span><span style="color:#ffffff;">}</span><span>;
+</span><span style="color:#ff79c6;">#pragma</span><span> pack(pop)
+</span></code></pre>
+<p>此时的内存布局：</p>
+<pre data-lang="txt" style="background-color:#282a36;color:#f8f8f2;" class="language-txt "><code class="language-txt" data-lang="txt"><span>offsets: a=0, b=4, b=12
+</span><span>sizeof(struct foo)=13
+</span></code></pre>
+<h3 id="attribute-ji-zhi"><code>__attribute__</code> 机制</h3>
+<blockquote>
+<p><code>__attribute__</code> 是 GCC 特有的机制，用于在声明函数、变量或类型时指定属性，以影响编译器的行为。</p>
+</blockquote>
+<p>可以通过其中的 <a href="https://gcc.gnu.org/onlinedocs/gcc/Common-Type-Attributes.html">aligned 和 packed</a> 属性控制对齐方式。</p>
+<pre data-lang="c" style="background-color:#282a36;color:#f8f8f2;" class="language-c "><code class="language-c" data-lang="c"><span style="font-style:italic;color:#8be9fd;">struct </span><span>foo </span><span style="color:#ffffff;">{
+</span><span>  </span><span style="font-style:italic;color:#8be9fd;">int</span><span> a;   </span><span style="color:#6272a4;">// 4 个字节
+</span><span>  </span><span style="font-style:italic;color:#8be9fd;">char </span><span style="color:#ff79c6;">*</span><span>b; </span><span style="color:#6272a4;">// 8 个字节
+</span><span>  </span><span style="font-style:italic;color:#8be9fd;">char</span><span> c;  </span><span style="color:#6272a4;">// 1 个字节
+</span><span style="color:#ffffff;">} </span><span style="color:#ff79c6;">__attribute__</span><span>((packed));
+</span></code></pre>
+<p>实现同样的效果：</p>
+<pre data-lang="txt" style="background-color:#282a36;color:#f8f8f2;" class="language-txt "><code class="language-txt" data-lang="txt"><span>offsets: a=0, b=4, b=12
+</span><span>sizeof(struct foo)=13
+</span></code></pre>
+<p>在实际的项目中，<a href="https://github.com/mfontanini/libtins/blob/master/include/tins/macros.h#L52">libtins</a> 库就是使用了 <strong>attribute</strong> 机制。</p>
+<pre data-lang="c++" style="background-color:#282a36;color:#f8f8f2;" class="language-c++ "><code class="language-c++" data-lang="c++"><span style="color:#6272a4;">// Check if this is Visual Studio
+</span><span style="color:#ff79c6;">#ifdef</span><span> _MSC_VER
+</span><span>    </span><span style="color:#6272a4;">// This is Visual Studio
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span>TINS_BEGIN_PACK </span><span style="color:#50fa7b;">__pragma</span><span>( </span><span style="color:#50fa7b;">pack</span><span>(push, </span><span style="color:#bd93f9;">1</span><span>) )
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span>TINS_END_PACK </span><span style="color:#50fa7b;">__pragma</span><span>( </span><span style="color:#50fa7b;">pack</span><span>(pop) )
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span style="color:#50fa7b;">TINS_PACKED</span><span>(</span><span style="font-style:italic;color:#ffb86c;">DECLARATION</span><span>) </span><span style="color:#50fa7b;">__pragma</span><span>( </span><span style="color:#50fa7b;">pack</span><span>(push, </span><span style="color:#bd93f9;">1</span><span>) ) DECLARATION </span><span style="color:#50fa7b;">__pragma</span><span>( </span><span style="color:#50fa7b;">pack</span><span>(pop) )
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span style="color:#50fa7b;">TINS_DEPRECATED</span><span>(</span><span style="font-style:italic;color:#ffb86c;">func</span><span>) </span><span style="color:#ff79c6;">__declspec</span><span>(</span><span style="color:#bd93f9;">deprecated</span><span>) func
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span>TINS_NOEXCEPT
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span style="color:#50fa7b;">TINS_LIKELY</span><span>(</span><span style="font-style:italic;color:#ffb86c;">x</span><span>) (x)
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span style="color:#50fa7b;">TINS_UNLIKELY</span><span>(</span><span style="font-style:italic;color:#ffb86c;">x</span><span>) (x)
+</span><span style="color:#ff79c6;">#else
+</span><span>    </span><span style="color:#6272a4;">// Not Visual Studio. Assume this is gcc compatible
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span>TINS_BEGIN_PACK
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span>TINS_END_PACK </span><span style="color:#ff79c6;">__attribute__</span><span>((packed))
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span style="color:#50fa7b;">TINS_PACKED</span><span>(</span><span style="font-style:italic;color:#ffb86c;">DECLARATION</span><span>) DECLARATION </span><span style="color:#ff79c6;">__attribute__</span><span>((packed))
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span style="color:#50fa7b;">TINS_DEPRECATED</span><span>(</span><span style="font-style:italic;color:#ffb86c;">func</span><span>) func </span><span style="color:#ff79c6;">__attribute__ </span><span>((deprecated))
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span>TINS_NOEXCEPT </span><span style="color:#ff79c6;">noexcept
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span style="color:#50fa7b;">TINS_LIKELY</span><span>(</span><span style="font-style:italic;color:#ffb86c;">x</span><span>) </span><span style="color:#50fa7b;">__builtin_expect</span><span>((x),</span><span style="color:#bd93f9;">1</span><span>)
+</span><span>    </span><span style="color:#ff79c6;">#define </span><span style="color:#50fa7b;">TINS_UNLIKELY</span><span>(</span><span style="font-style:italic;color:#ffb86c;">x</span><span>) </span><span style="color:#50fa7b;">__builtin_expect</span><span>((x),</span><span style="color:#bd93f9;">0</span><span>)
+</span><span style="color:#ff79c6;">#endif </span><span style="color:#6272a4;">// _MSC_VER
+</span></code></pre>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https://luizyao.github.io/blog/tags/c-yu-yan/">#C 语言</a>
+                    
+                        <a href="https://luizyao.github.io/blog/tags/struct-nei-cun-bu-ju/">#struct 内存布局</a>
+                    
+                </div>
+            
+            
+
+        
+
+    </div>
+
+    <div class="post-footer">
+    
+    
+    </div>
+
+    
+        <div id="vcomments"></div>
+        <script>
+            new Valine({
+                el: '#vcomments',
+                appId: 'ELAxhd0CdYZzYItFv1aOgfkU-gzGzoHsz',
+                appKey: 'Dn5ewE2hhnJwQXe1LsucljYV',
+                visitor: true // 阅读量统计
+            })
+        </script>
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            <div style="text-align: center;">
+                <span class="author">
+                    © 2020-2025 Luiz Yao
+                </span>
+                 &nbsp;|&nbsp;
+                <span class="license">
+                    <a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh-Hans" target="_blank">CC BY-NC 4.0</a>
+                </span>
+            </div>
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https://luizyao.github.io/blog/even.js" ></script>
+      
+    </body>
+
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
+    <title>Luiz&#x27;s Blog - 其它</title>
+    <link rel="self" type="application/atom+xml" href="https://luizyao.github.io/blog/categories/qi-ta/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://luizyao.github.io/blog/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-01-22T00:00:00+00:00</updated>
+    <id>https://luizyao.github.io/blog/categories/qi-ta/atom.xml</id>
+    <entry xml:lang="zh-CN">
+        <title>速度测试：playwright vs playwright-python</title>
+        <published>2021-01-22T00:00:00+00:00</published>
+        <updated>2021-01-22T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://luizyao.github.io/blog/playwright-vs-playwright-python-speed-comparison/"/>
+        <id>https://luizyao.github.io/blog/playwright-vs-playwright-python-speed-comparison/</id>
+        
+        <summary type="html">&lt;p&gt;最近在网络上看到一篇文章：&lt;a href=&quot;https:&#x2F;&#x2F;blog.checklyhq.com&#x2F;puppeteer-vs-selenium-vs-playwright-speed-comparison&#x2F;&quot;&gt;puppeteer vs selenium vs playwright, a speed comparison&lt;&#x2F;a&gt;，作者是 &lt;a href=&quot;https:&#x2F;&#x2F;www.checklyhq.com&#x2F;&quot;&gt;Checkly 团队&lt;&#x2F;a&gt;, 他们对 puppeteer、playwright 和 selenium 的执行速度做了量化的比较，得出的结论是 puppeteer 和 playwright 比 selenium 快了大概 20% 左右，有兴趣的同学可以看看。&lt;&#x2F;p&gt;
+&lt;p&gt;受此启发，我对 &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;microsoft&#x2F;playwright&quot;&gt;playwright&lt;&#x2F;a&gt; 和 &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;microsoft&#x2F;playwright-python&quot;&gt;playwright-python&lt;&#x2F;a&gt; 也做了同样的测试。&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+    <entry xml:lang="zh-CN">
+        <title>Unicode 标准及其常见的编码方案</title>
+        <published>2020-07-26T00:00:00+00:00</published>
+        <updated>2020-07-26T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://luizyao.github.io/blog/unicode-standard-and-encoding/"/>
+        <id>https://luizyao.github.io/blog/unicode-standard-and-encoding/</id>
+        
+        <summary type="html">&lt;p&gt;Unicode 标准为每一个字符提供一个唯一的数字，而不用区分平台、语言等因素。&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+</feed>
