@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
+    <title>Luiz&#x27;s Blog - python-closure</title>
+    <link rel="self" type="application/atom+xml" href="https://luizyao.github.io/blog/tags/python-closure/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://luizyao.github.io/blog/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-02-01T00:00:00+00:00</updated>
+    <id>https://luizyao.github.io/blog/tags/python-closure/atom.xml</id>
+    <entry xml:lang="zh-CN">
+        <title>Python 中的函数装饰器和闭包</title>
+        <published>2021-02-01T00:00:00+00:00</published>
+        <updated>2021-02-01T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://luizyao.github.io/blog/python-decorator-and-closure-md/"/>
+        <id>https://luizyao.github.io/blog/python-decorator-and-closure-md/</id>
+        
+        <summary type="html">&lt;p&gt;Python 中的函数装饰器可以被用于增强方法的某些行为，如果想自己实现装饰器，则必须了解闭包的概念。&lt;&#x2F;p&gt;
+&lt;p&gt;本文也是《流畅的 Python》第七章的学习笔记。&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+</feed>

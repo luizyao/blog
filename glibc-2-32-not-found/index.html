@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>Luiz&#x27;s Blog - &#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc.so.6: version `GLIBC_2.34&#x27; not found</title>
+
+      
+
+      
+          <!-- <script type="text/javascript" src="https://luizyao.github.io/blog/slideout.min.js" ></script> -->
+          <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/index.min.js"></script>
+          
+          <!-- <script type="text/javascript" src="https://luizyao.github.io/blog/Valine.min.js" ></script> -->
+          <script src="https://cdn.jsdelivr.net/npm/valine@1.4.18/dist/Valine.min.js" integrity="sha256-nPUdUfwNm4YBBhEYBxrSbW5DmfVODKCzs0nAp1Z3RnM=" crossorigin="anonymous"></script>
+          
+          
+      
+
+      
+          <link rel="stylesheet" href="https://luizyao.github.io/blog/site.css">
+          
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">Luiz&#x27;s Blog</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;categories">
+                            归档
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;tags">
+                            标签
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;">Luiz&#x27;s Blog</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;categories">
+                                    归档
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;tags">
+                                    标签
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;glibc-2-32-not-found&#x2F;">&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc.so.6: version `GLIBC_2.34&#x27; not found</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2025-11-25</span>
+            
+            
+                <div class="post__category">
+                    
+                        <a href="https://luizyao.github.io/blog/categories/c-c/">#C&#x2F;C++</a>
+                    
+                </div>
+            
+            
+                <span class="post__category leancloud_visitors" id="/blog/glibc-2-32-not-found/" data-flag-title="&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc.so.6: version `GLIBC_2.34&#x27; not found">
+                    <em class="post-meta-item-text"  style="font-style: normal;">· 阅读量 </em>
+                    <i class="leancloud-visitors-count"  style="font-style: normal;">1000000</i>
+                </span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <p>在 Ubuntu 20.04 中执行 22.04 编译的程序，可能会触发 GLIBC 的版本问题。</p>
+<p>主要原因是 Ubuntu 22.04 默认的 glibc 版本是 2.35，Ubuntu 20.04 最新的版本是 2.31。</p>
+<span id="continue-reading"></span>
+<p>通过在 Ubuntu 20.04 中安装指定的 glibc 版本，并只针对特定程序生效。</p>
+<blockquote>
+<p>本文以下操作涉及 Docker（Podman） 镜像 <code>docker.io/library/buildpack-deps</code> 的 <code>20.04</code> 和 <code>22.04</code>。</p>
+</blockquote>
+<p>在独立目录安装 glibc</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #50FA7B;">$</span><span style="color: #F1FA8C;"> mkdir</span><span style="color: #BD93F9;"> $HOME</span><span style="color: #F1FA8C;">/glibc/</span><span> &amp;&amp;</span><span style="color: #8BE9FD;"> cd</span><span style="color: #BD93F9;"> $HOME</span><span style="color: #F1FA8C;">/glibc</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">$</span><span style="color: #F1FA8C;"> wget http://ftp.gnu.org/gnu/libc/glibc-2.35.tar.gz</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">$</span><span style="color: #F1FA8C;"> tar</span><span style="color: #BD93F9;"> -xvzf</span><span style="color: #F1FA8C;"> glibc-2.35.tar.gz</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">$</span><span style="color: #F1FA8C;"> mkdir build</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">$</span><span style="color: #F1FA8C;"> mkdir glibc-2.35-install</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">$</span><span style="color: #F1FA8C;"> cd build</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">$</span><span style="color: #F1FA8C;"> ~/glibc/glibc-2.35/configure</span><span style="color: #BD93F9;"> --prefix=$HOME/glibc/glibc-2.35-install</span></span></code></pre>
+<blockquote>
+<p>这里可能会遇到错误： <code>These critical programs are missing or too old: gawk bison</code>。</p>
+<p>执行以下操作：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #50FA7B;">$</span><span style="color: #F1FA8C;"> apt update</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">$</span><span style="color: #F1FA8C;"> apt install gawk bison</span></span></code></pre></blockquote>
+<p>继续执行：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #50FA7B;">$</span><span style="color: #F1FA8C;"> make</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">$</span><span style="color: #F1FA8C;"> make install</span></span></code></pre>
+<p>最后，在执行程序前添加前缀 <code>LD_LIBRARY_PATH=/root/glibc/glibc-2.35-install/lib:/lib64/:/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH /root/glibc/glibc-2.35-install/lib/ld-linux-x86-64.so.2</code>。</p>
+<p><img src="https://luizyao.github.io/blog/glibc-2-32-not-found/example.png" alt="Example" /></p>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https://luizyao.github.io/blog/tags/glibc/">#glibc</a>
+                    
+                </div>
+            
+            
+
+        
+
+    </div>
+
+    <div class="post-footer">
+    
+    
+    </div>
+
+    
+        <div id="vcomments"></div>
+        <script>
+            new Valine({
+                el: '#vcomments',
+                appId: 'ELAxhd0CdYZzYItFv1aOgfkU-gzGzoHsz',
+                appKey: 'Dn5ewE2hhnJwQXe1LsucljYV',
+                visitor: true // 阅读量统计
+            })
+        </script>
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            <div style="text-align: center;">
+                <span class="author">
+                    © 2020-2025 Luiz Yao
+                </span>
+                 &nbsp;|&nbsp;
+                <span class="license">
+                    <a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh-Hans" target="_blank">CC BY-NC 4.0</a>
+                </span>
+            </div>
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https://luizyao.github.io/blog/even.js" ></script>
+      
+    </body>
+
+</html>

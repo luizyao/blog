@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
+    <title>Luiz&#x27;s Blog - glibc</title>
+    <link rel="self" type="application/atom+xml" href="https://luizyao.github.io/blog/tags/glibc/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://luizyao.github.io/blog/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-11-25T00:00:00+00:00</updated>
+    <id>https://luizyao.github.io/blog/tags/glibc/atom.xml</id>
+    <entry xml:lang="zh-CN">
+        <title>&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc.so.6: version `GLIBC_2.34&#x27; not found</title>
+        <published>2025-11-25T00:00:00+00:00</published>
+        <updated>2025-11-25T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://luizyao.github.io/blog/glibc-2-32-not-found/"/>
+        <id>https://luizyao.github.io/blog/glibc-2-32-not-found/</id>
+        
+        <summary type="html">&lt;p&gt;在 Ubuntu 20.04 中执行 22.04 编译的程序，可能会触发 GLIBC 的版本问题。&lt;&#x2F;p&gt;
+&lt;p&gt;主要原因是 Ubuntu 22.04 默认的 glibc 版本是 2.35，Ubuntu 20.04 最新的版本是 2.31。&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+</feed>

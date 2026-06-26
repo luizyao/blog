@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>Luiz&#x27;s Blog - Podman 部署 Open WebUI</title>
+
+      
+
+      
+          <!-- <script type="text/javascript" src="https://luizyao.github.io/blog/slideout.min.js" ></script> -->
+          <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/index.min.js"></script>
+          
+          <!-- <script type="text/javascript" src="https://luizyao.github.io/blog/Valine.min.js" ></script> -->
+          <script src="https://cdn.jsdelivr.net/npm/valine@1.4.18/dist/Valine.min.js" integrity="sha256-nPUdUfwNm4YBBhEYBxrSbW5DmfVODKCzs0nAp1Z3RnM=" crossorigin="anonymous"></script>
+          
+          
+      
+
+      
+          <link rel="stylesheet" href="https://luizyao.github.io/blog/site.css">
+          
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">Luiz&#x27;s Blog</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;categories">
+                            归档
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;tags">
+                            标签
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;">Luiz&#x27;s Blog</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;categories">
+                                    归档
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;tags">
+                                    标签
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+<div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">目录</h2>
+    <div class="post-toc-content always-active">
+        <nav id="TableOfContents">
+            <ul>
+                
+                <li>
+                    <a href="#podman-bu-shu-open-webui" class="toc-link">Podman 部署 Open WebUI</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="#jie-jue-open-webui-wu-fa-fang-wen-ollama-de-wen-ti" class="toc-link">解决 Open WebUI 无法访问 ollama 的问题</a>
+                    
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;open-webui-by-podman-with-cuda&#x2F;">Podman 部署 Open WebUI</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2025-09-05</span>
+            
+            
+                <div class="post__category">
+                    
+                        <a href="https://luizyao.github.io/blog/categories/ai/">#AI</a>
+                    
+                </div>
+            
+            
+                <span class="post__category leancloud_visitors" id="/blog/open-webui-by-podman-with-cuda/" data-flag-title="Podman 部署 Open WebUI">
+                    <em class="post-meta-item-text"  style="font-style: normal;">· 阅读量 </em>
+                    <i class="leancloud-visitors-count"  style="font-style: normal;">1000000</i>
+                </span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <p>Podman 部署 <a rel="external" href="https://github.com/open-webui/open-webui">Open WebUI</a>，并支持 Nvidia GPU，能够和本地安装的 ollama 通信。</p>
+<span id="continue-reading"></span><h2 id="podman-bu-shu-open-webui">Podman 部署 Open WebUI</h2>
+<blockquote>
+<p>Open WebUI 的 Github 主页提供了<a rel="external" href="https://github.com/open-webui/open-webui?tab=readme-ov-file#installation-with-default-configuration">基于 Docker 的部署方式，并支持 Nvidia GPU</a>：</p>
+</blockquote>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #50FA7B;">docker</span><span style="color: #F1FA8C;"> run</span><span style="color: #BD93F9;"> -d -p</span><span style="color: #F1FA8C;"> 3000:8080</span><span style="color: #BD93F9;"> --gpus</span><span style="color: #F1FA8C;"> all</span><span style="color: #BD93F9;"> --add-host=host.docker.internal:host-gateway -v</span><span style="color: #F1FA8C;"> open-webui:/app/backend/data</span><span style="color: #BD93F9;"> --name</span><span style="color: #F1FA8C;"> open-webui</span><span style="color: #BD93F9;"> --restart</span><span style="color: #F1FA8C;"> always ghcr.io/open-webui/open-webui:cuda</span></span></code></pre>
+<p>针对 Podman 有以下几处修改：</p>
+<ol>
+<li>安装 <a rel="external" href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html">NVIDIA Container Toolkit</a>：</li>
+</ol>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6272A4;"># Configure the production repository</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">curl</span><span style="color: #BD93F9;"> -s -L</span><span style="color: #F1FA8C;"> https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo</span><span style="color: #FF79C6;"> |</span><span style="color: #50FA7B;"> sudo</span><span style="color: #F1FA8C;"> tee /etc/yum.repos.d/nvidia-container-toolkit.repo</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6272A4;"># Install the NVIDIA Container Toolkit packages:</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">export</span><span style="color: #BD93F9;"> NVIDIA_CONTAINER_TOOLKIT_VERSION</span><span style="color: #FF79C6;">=</span><span style="color: #BD93F9;">1</span><span>.</span><span style="color: #BD93F9;">17</span><span>.</span><span style="color: #BD93F9;">8-1</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">  sudo</span><span style="color: #F1FA8C;"> dnf install</span><span style="color: #BD93F9;"> -y</span><span style="color: #FF79C6;"> \</span></span>
+<span class="giallo-l"><span style="color: #F1FA8C;">      nvidia-container-toolkit-base-</span><span>${</span><span style="color: #BD93F9;">NVIDIA_CONTAINER_TOOLKIT_VERSION</span><span>}</span></span></code></pre>
+<p>这里我只安装了 <code>nvidia-container-toolkit-base</code>。主要原因官方推荐通过 <a rel="external" href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/cdi-support.html">CDI</a> 的方式使用 Nvidia GPU，而 CDI 的文档中有如下描述：</p>
+<blockquote>
+<p>You installed either the NVIDIA Container Toolkit or you installed the <code>nvidia-container-toolkit-base</code> package. The base package includes the container runtime and the <code>nvidia-ctk</code> command-line interface, but avoids installing the container runtime hook and transitive dependencies. The hook and dependencies are not needed on machines that use CDI exclusively.</p>
+</blockquote>
+<p>这里也同步附上原始的安装命令作为对比：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6272A4;"># Install the NVIDIA Container Toolkit packages:</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">export</span><span style="color: #BD93F9;"> NVIDIA_CONTAINER_TOOLKIT_VERSION</span><span style="color: #FF79C6;">=</span><span style="color: #BD93F9;">1</span><span>.</span><span style="color: #BD93F9;">17</span><span>.</span><span style="color: #BD93F9;">8-1</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">  sudo</span><span style="color: #F1FA8C;"> dnf install</span><span style="color: #BD93F9;"> -y</span><span style="color: #FF79C6;"> \</span></span>
+<span class="giallo-l"><span style="color: #F1FA8C;">      nvidia-container-toolkit-</span><span>${</span><span style="color: #BD93F9;">NVIDIA_CONTAINER_TOOLKIT_VERSION</span><span>}</span><span style="color: #FF79C6;"> \</span></span>
+<span class="giallo-l"><span style="color: #F1FA8C;">      nvidia-container-toolkit-base-</span><span>${</span><span style="color: #BD93F9;">NVIDIA_CONTAINER_TOOLKIT_VERSION</span><span>}</span><span style="color: #FF79C6;"> \</span></span>
+<span class="giallo-l"><span style="color: #F1FA8C;">      libnvidia-container-tools-</span><span>${</span><span style="color: #BD93F9;">NVIDIA_CONTAINER_TOOLKIT_VERSION</span><span>}</span><span style="color: #FF79C6;"> \</span></span>
+<span class="giallo-l"><span style="color: #F1FA8C;">      libnvidia-container1-</span><span>${</span><span style="color: #BD93F9;">NVIDIA_CONTAINER_TOOLKIT_VERSION</span><span>}</span></span></code></pre>
+<ol start="2">
+<li>配置 CDI：</li>
+</ol>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6272A4;"># Generate the CDI specification file</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">sudo</span><span style="color: #F1FA8C;"> nvidia-ctk cdi generate</span><span style="color: #BD93F9;"> --output=/etc/cdi/nvidia.yaml</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6272A4;"># (Optional) Check the names of the generated devices</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">nvidia-ctk</span><span style="color: #F1FA8C;"> cdi list</span></span></code></pre>
+<ol start="3">
+<li>验证上述步骤</li>
+</ol>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #50FA7B;">podman</span><span style="color: #F1FA8C;"> run</span><span style="color: #BD93F9;"> --rm --device</span><span style="color: #F1FA8C;"> nvidia.com/gpu=all</span><span style="color: #BD93F9;"> --security-opt=label=disable</span><span style="color: #F1FA8C;"> ubuntu nvidia-smi</span><span style="color: #BD93F9;"> -L</span></span></code></pre>
+<p>上述命令输出，应该和在本机直接执行 <code>nvidia-smi -L</code> 一致。</p>
+<ol start="4">
+<li>修正后的 Podman 启动 Open WebUI 如下：</li>
+</ol>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #50FA7B;">podman</span><span style="color: #F1FA8C;"> run</span><span style="color: #BD93F9;"> -d -p</span><span style="color: #F1FA8C;"> 3000:8080</span><span style="color: #BD93F9;"> --device</span><span style="color: #F1FA8C;"> nvidia.com/gpu=all</span><span style="color: #BD93F9;"> --security-opt=label=disable --add-host=host.containers.internal:host-gateway -v $HOME</span><span style="color: #F1FA8C;">/open-webui:/app/backend/data</span><span style="color: #BD93F9;"> --name</span><span style="color: #F1FA8C;"> open-webui</span><span style="color: #BD93F9;"> --restart</span><span style="color: #F1FA8C;"> always</span><span style="color: #BD93F9;"> --replace</span><span style="color: #F1FA8C;"> ghcr.io/open-webui/open-webui:cuda</span></span></code></pre>
+<p>查看启动日志：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="plain"><span class="giallo-l"><span>❯ podman logs open-webui </span></span>
+<span class="giallo-l"><span>Loading WEBUI_SECRET_KEY from file, not provided as an environment variable.</span></span>
+<span class="giallo-l"><span>Generating WEBUI_SECRET_KEY</span></span>
+<span class="giallo-l"><span>Loading WEBUI_SECRET_KEY from .webui_secret_key</span></span>
+<span class="giallo-l"><span>CUDA is enabled, appending LD_LIBRARY_PATH to include torch/cudnn &amp; cublas libraries.</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Context impl SQLiteImpl.</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Will assume non-transactional DDL.</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade  -&gt; 7e5b5dc7342b, init</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade 7e5b5dc7342b -&gt; ca81bd47c050, Add config table</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade ca81bd47c050 -&gt; c0fbf31ca0db, Update file table</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade c0fbf31ca0db -&gt; 6a39f3d8e55c, Add knowledge table</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade 6a39f3d8e55c -&gt; 242a2047eae0, Update chat table</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade 242a2047eae0 -&gt; 1af9b942657b, Migrate tags</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade 1af9b942657b -&gt; 3ab32c4b8f59, Update tags</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade 3ab32c4b8f59 -&gt; c69f45358db4, Add folder table</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade c69f45358db4 -&gt; c29facfe716b, Update file table path</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade c29facfe716b -&gt; af906e964978, Add feedback table</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade af906e964978 -&gt; 4ace53fd72c8, Update folder table and change DateTime to BigInteger for timestamp fields</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade 4ace53fd72c8 -&gt; 922e7a387820, Add group table</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade 922e7a387820 -&gt; 57c599a3cb57, Add channel table</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade 57c599a3cb57 -&gt; 7826ab40b532, Update file table</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade 7826ab40b532 -&gt; 3781e22d8b01, Update message &amp; channel tables</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade 3781e22d8b01 -&gt; 9f0c9cd09105, Add note table</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade 9f0c9cd09105 -&gt; d31026856c01, Update folder table data</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade d31026856c01 -&gt; 018012973d35, Add indexes</span></span>
+<span class="giallo-l"><span>INFO  [alembic.runtime.migration] Running upgrade 018012973d35 -&gt; 3af16a1c9fb6, update user table</span></span>
+<span class="giallo-l"><span>WARNI [open_webui.env] </span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>WARNING: CORS_ALLOW_ORIGIN IS SET TO &#39;*&#39; - NOT RECOMMENDED FOR PRODUCTION DEPLOYMENTS.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>INFO  [open_webui.env] VECTOR_DB: chroma</span></span>
+<span class="giallo-l"><span>INFO  [open_webui.env] Embedding model set: sentence-transformers/all-MiniLM-L6-v2</span></span>
+<span class="giallo-l"><span>WARNI [langchain_community.utils.user_agent] USER_AGENT environment variable not set, consider setting it to identify your requests.</span></span>
+<span class="giallo-l"><span>Creating knowledge table</span></span>
+<span class="giallo-l"><span>Migrating data from document table to knowledge table</span></span>
+<span class="giallo-l"><span>Converting &#39;chat&#39; column to JSON</span></span>
+<span class="giallo-l"><span>Renaming &#39;chat&#39; column to &#39;old_chat&#39;</span></span>
+<span class="giallo-l"><span>Adding new &#39;chat&#39; column of type JSON</span></span>
+<span class="giallo-l"><span>Dropping &#39;old_chat&#39; column</span></span>
+<span class="giallo-l"><span>Primary Key: {&#39;name&#39;: None, &#39;constrained_columns&#39;: []}</span></span>
+<span class="giallo-l"><span>Unique Constraints: [{&#39;name&#39;: &#39;uq_id_user_id&#39;, &#39;column_names&#39;: [&#39;id&#39;, &#39;user_id&#39;]}]</span></span>
+<span class="giallo-l"><span>Indexes: [{&#39;name&#39;: &#39;tag_id&#39;, &#39;column_names&#39;: [&#39;id&#39;], &#39;unique&#39;: 1, &#39;dialect_options&#39;: {}}]</span></span>
+<span class="giallo-l"><span>Creating new primary key with &#39;id&#39; and &#39;user_id&#39;.</span></span>
+<span class="giallo-l"><span>Dropping unique constraint: uq_id_user_id</span></span>
+<span class="giallo-l"><span>Dropping unique index: tag_id</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>██████╗ ██████╗ ███████╗███╗   ██╗    ██╗    ██╗███████╗██████╗ ██╗   ██╗██╗</span></span>
+<span class="giallo-l"><span>██╔═══██╗██╔══██╗██╔════╝████╗  ██║    ██║    ██║██╔════╝██╔══██╗██║   ██║██║</span></span>
+<span class="giallo-l"><span>██║   ██║██████╔╝█████╗  ██╔██╗ ██║    ██║ █╗ ██║█████╗  ██████╔╝██║   ██║██║</span></span>
+<span class="giallo-l"><span>██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║    ██║███╗██║██╔══╝  ██╔══██╗██║   ██║██║</span></span>
+<span class="giallo-l"><span>╚██████╔╝██║     ███████╗██║ ╚████║    ╚███╔███╔╝███████╗██████╔╝╚██████╔╝██║</span></span>
+<span class="giallo-l"><span>╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝     ╚══╝╚══╝ ╚══════╝╚═════╝  ╚═════╝ ╚═╝</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>v0.6.26 - building the best AI user interface.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>https://github.com/open-webui/open-webui</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Fetching 30 files: 100%|██████████| 30/30 [02:26&lt;00:00,  4.87s/it]</span></span>
+<span class="giallo-l"><span>INFO:     Started server process [1]</span></span>
+<span class="giallo-l"><span>INFO:     Waiting for application startup.</span></span></code></pre>
+<p>可以通过访问 http://localhost:3000 正常使用 Open WebUI。</p>
+<h2 id="jie-jue-open-webui-wu-fa-fang-wen-ollama-de-wen-ti">解决 Open WebUI 无法访问 ollama 的问题</h2>
+<blockquote>
+<p>这里 ollama 是本地安装，绑定端口 11434。</p>
+</blockquote>
+<p>主要原因是容器内无法通过 http://host.containers.internal 访问本地网络，可以直接制定 --network=host。</p>
+<p>修改 podman 启动命令：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #50FA7B;">podman</span><span style="color: #F1FA8C;"> run</span><span style="color: #BD93F9;"> -d --network=host --device</span><span style="color: #F1FA8C;"> nvidia.com/gpu=all</span><span style="color: #BD93F9;"> --security-opt=label=disable --add-host=host.containers.internal:host-gateway -v $HOME</span><span style="color: #F1FA8C;">/open-webui:/app/backend/data</span><span style="color: #BD93F9;"> --name</span><span style="color: #F1FA8C;"> open-webui</span><span style="color: #BD93F9;"> --restart</span><span style="color: #F1FA8C;"> always</span><span style="color: #BD93F9;"> --replace</span><span style="color: #F1FA8C;"> ghcr.io/open-webui/open-webui:cuda</span></span></code></pre>
+<p>通过 http://localhost:8080 访问 Open WebUI，而不是之前的 3000 端口。</p>
+<p>登录成功后，进入【Admin Panel】 -&gt; 【Settings】 -&gt; 【Connections】:</p>
+<ul>
+<li>关闭【OpenAI API】</li>
+<li>修改【Ollama API】中的 URL 为 http://localhost:11434</li>
+</ul>
+<p>这样就可以调用 ollama。</p>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https://luizyao.github.io/blog/tags/open-webui/">#Open WebUI</a>
+                    
+                        <a href="https://luizyao.github.io/blog/tags/podman/">#podman</a>
+                    
+                        <a href="https://luizyao.github.io/blog/tags/ollama/">#ollama</a>
+                    
+                </div>
+            
+            
+
+        
+
+    </div>
+
+    <div class="post-footer">
+    
+    
+    </div>
+
+    
+        <div id="vcomments"></div>
+        <script>
+            new Valine({
+                el: '#vcomments',
+                appId: 'ELAxhd0CdYZzYItFv1aOgfkU-gzGzoHsz',
+                appKey: 'Dn5ewE2hhnJwQXe1LsucljYV',
+                visitor: true // 阅读量统计
+            })
+        </script>
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            <div style="text-align: center;">
+                <span class="author">
+                    © 2020-2025 Luiz Yao
+                </span>
+                 &nbsp;|&nbsp;
+                <span class="license">
+                    <a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh-Hans" target="_blank">CC BY-NC 4.0</a>
+                </span>
+            </div>
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https://luizyao.github.io/blog/even.js" ></script>
+      
+    </body>
+
+</html>

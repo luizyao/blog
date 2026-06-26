@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>Luiz&#x27;s Blog - 在 Python 中 C&#x2F;C++ 的 printf 输出</title>
+
+      
+
+      
+          <!-- <script type="text/javascript" src="https://luizyao.github.io/blog/slideout.min.js" ></script> -->
+          <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/index.min.js"></script>
+          
+          <!-- <script type="text/javascript" src="https://luizyao.github.io/blog/Valine.min.js" ></script> -->
+          <script src="https://cdn.jsdelivr.net/npm/valine@1.4.18/dist/Valine.min.js" integrity="sha256-nPUdUfwNm4YBBhEYBxrSbW5DmfVODKCzs0nAp1Z3RnM=" crossorigin="anonymous"></script>
+          
+          
+      
+
+      
+          <link rel="stylesheet" href="https://luizyao.github.io/blog/site.css">
+          
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">Luiz&#x27;s Blog</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;categories">
+                            归档
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;tags">
+                            标签
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;">Luiz&#x27;s Blog</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;categories">
+                                    归档
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;&#x2F;tags">
+                                    标签
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+<div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">目录</h2>
+    <div class="post-toc-content always-active">
+        <nav id="TableOfContents">
+            <ul>
+                
+                <li>
+                    <a href="#c-shi-zen-me-xie-stdout-de" class="toc-link">C 是怎么写 stdout 的</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="#python-de-sys-stdout-ti-huan-zhua-bu-dao-c" class="toc-link">Python 的 sys.stdout 替换抓不到 C</a>
+                    
+                    <ul>
+                        
+                        <li>
+                            <a href="#os-dup2-zai-wen-jian-miao-shu-fu-ceng-mian-dong-shou" class="toc-link">os.dup2() — 在文件描述符层面动手</a>
+                        </li>
+                        
+                    </ul>
+                    
+                </li>
+                
+                <li>
+                    <a href="#c-biao-zhun-ku-de-huan-chong-qu" class="toc-link">C 标准库的缓冲区</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="#wan-zheng-liu-cheng-hui-gu" class="toc-link">完整流程回顾</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="#zong-jie-yi-zhang-nao-tu" class="toc-link">总结：一张脑图</a>
+                    
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;luizyao.github.io&#x2F;blog&#x2F;capture-c-printf-in-python&#x2F;">在 Python 中 C&#x2F;C++ 的 printf 输出</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2026-06-26</span>
+            
+            
+                <div class="post__category">
+                    
+                        <a href="https://luizyao.github.io/blog/categories/c-c/">#C&#x2F;C++</a>
+                    
+                </div>
+            
+            
+                <span class="post__category leancloud_visitors" id="/blog/capture-c-printf-in-python/" data-flag-title="在 Python 中 C&#x2F;C++ 的 printf 输出">
+                    <em class="post-meta-item-text"  style="font-style: normal;">· 阅读量 </em>
+                    <i class="leancloud-visitors-count"  style="font-style: normal;">1000000</i>
+                </span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <p>一个简单的 C 程序：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="c"><span class="giallo-l"><span style="color: #FF79C6;">#include</span><span style="color: #E9F284;"> &lt;</span><span style="color: #F1FA8C;">stdio.h</span><span style="color: #E9F284;">&gt;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF79C6;">void</span><span style="color: #50FA7B;"> say_hello</span><span>() {</span></span>
+<span class="giallo-l"><span style="color: #50FA7B;">    printf</span><span>(</span><span style="color: #E9F284;">&quot;</span><span style="color: #F1FA8C;">Hello World!</span><span style="color: #E9F284;">&quot;</span><span>);</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>编译成共享库：<code>gcc -shared -fPIC hello.c -o libhello.so</code>。</p>
+<p>如果想在 Python 里抓到这些输出：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="python"><span class="giallo-l"><span style="color: #FF79C6;">import</span><span> io, sys, ctypes</span></span>
+<span class="giallo-l"><span>sys.stdout</span><span style="color: #FF79C6;"> =</span><span> io.StringIO()</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>lib</span><span style="color: #FF79C6;"> =</span><span> ctypes.CDLL(</span><span style="color: #E9F284;">&quot;</span><span style="color: #F1FA8C;">./libhello.so</span><span style="color: #E9F284;">&quot;</span><span>)</span></span>
+<span class="giallo-l"><span>lib.say_hello()</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>output</span><span style="color: #FF79C6;"> =</span><span> sys.stdout.getvalue()</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">print</span><span>(</span><span style="color: #E9F284;">&quot;</span><span style="color: #F1FA8C;">#### output: </span><span style="color: #FF79C6;">\n</span><span style="color: #E9F284;">&quot;</span><span>, output)</span></span></code></pre>
+<p>结果 <code>output</code> 是空的。</p>
+<p>一条都没抓到。</p>
+<p>怎么回事？C 明明写了 stdout，Python 为什么看不见？故事就从这里开始。</p>
+<hr />
+<h2 id="c-shi-zen-me-xie-stdout-de">C 是怎么写 stdout 的</h2>
+<p><code>printf("Hello World!")</code> 本质上等于 <code>fprintf(stdout, "Hello World!")</code>。这里的 <code>stdout</code> 是一个 <code>FILE*</code> 类型的指针，不是文件描述符 1。<code>FILE*</code> 是 C 标准库对文件描述符的一层包装，它带了一个关键的东西——<strong>内存缓冲区</strong>。</p>
+<p>当你调用 <code>printf</code> 时，数据并不一定立刻写出去。它的路径是这样的：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="plain"><span class="giallo-l"><span>printf(&quot;Hello World!&quot;) → 写入 FILE* 的 buffer → （某个时刻）→ write(1, buf, len) → 操作系统 → 终端/文件</span></span></code></pre>
+<p>这个"某个时刻"取决于缓冲策略：</p>
+<ul>
+<li><strong>行缓冲</strong>（终端模式）：遇到 <code>\n</code> 就 <code>write</code></li>
+<li><strong>全缓冲</strong>（重定向到文件）：buffer 满了（通常 4096 字节）才 <code>write</code></li>
+<li><strong>无缓冲</strong>（stderr）：来一条写一条</li>
+</ul>
+<p>用一个比喻可能更好理解：</p>
+<p>C 的 stdout 就像一根中间接了个水箱的水管。你往水管里倒水（<code>printf</code>），水先积在水箱里（FILE buffer）。水箱满了、或者你倒的水里有个浮标（<code>\n</code>），水箱的阀门才打开，水才流到河里去（<code>write(FD 1)</code>）。</p>
+<p>注意上面那个示例：<code>printf("Hello World!")</code> 没有 <code>\n</code>。如果你的程序跑在一个管道或文件重定向的环境里（全缓冲），这行字符串会一直躺在 buffer 里，直到程序退出时才被 <code>write</code> 出去。</p>
+<hr />
+<h2 id="python-de-sys-stdout-ti-huan-zhua-bu-dao-c">Python 的 <code>sys.stdout</code> 替换抓不到 C</h2>
+<p>先解释一下为什么前面用了 <code>sys.stdout = io.StringIO()</code>——这在 Python 世界里是捕获输出的"标准操作"。</p>
+<p>Python 的 <code>print()</code> 函数底层调用的是 <code>sys.stdout.write()</code>。所以如果你把 <code>sys.stdout</code> 换成一个 <code>io.StringIO</code> 对象，所有 Python 代码的输出都会被截住。这个模式遍布在测试代码、教学示例、甚至标准库的 <code>contextlib.redirect_stdout</code> 里：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="python"><span class="giallo-l"><span style="color: #6272A4;"># Python 文档上的标准做法</span></span>
+<span class="giallo-l"><span>old_stdout</span><span style="color: #FF79C6;"> =</span><span> sys.stdout</span></span>
+<span class="giallo-l"><span>sys.stdout</span><span style="color: #FF79C6;"> =</span><span> io.StringIO()</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">print</span><span>(</span><span style="color: #E9F284;">&quot;</span><span style="color: #F1FA8C;">hello</span><span style="color: #E9F284;">&quot;</span><span>)</span><span style="color: #6272A4;">                    # 走 sys.stdout.write()</span></span>
+<span class="giallo-l"><span>output</span><span style="color: #FF79C6;"> =</span><span> sys.stdout.getvalue()</span><span style="color: #6272A4;">    # 从 StringIO 拿回来</span></span>
+<span class="giallo-l"><span>sys.stdout</span><span style="color: #FF79C6;"> =</span><span> old_stdout</span><span style="color: #6272A4;">           # 恢复</span></span></code></pre>
+<p>简单、无副作用、纯 Python 层操作，是一个 Python 开发者的肌肉记忆。</p>
+<p><strong>但问题在于</strong>：这个操作隐含了一个假设——所有输出都走 <code>sys.stdout.write()</code>。这个假设在纯 Python 世界里成立。C 根本不走这一层：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="plain"><span class="giallo-l"><span>Python: print(&quot;hello&quot;) → sys.stdout.write() → [io.StringIO 捕获成功]</span></span>
+<span class="giallo-l"><span>C:      printf(&quot;hello&quot;) → FILE* buffer → write(1, buf) → [走 FD，StringIO 抓不到]</span></span></code></pre>
+<p>Python 和 C 的 stdout 是<strong>两张皮</strong>，在 Python 层替换没用。</p>
+<hr />
+<h3 id="os-dup2-zai-wen-jian-miao-shu-fu-ceng-mian-dong-shou"><code>os.dup2()</code> — 在文件描述符层面动手</h3>
+<p>不管是 C 还是 Python，最终都会走到 <code>write(1, buf)</code>——文件描述符 1 是所有人最后的共同出口。所以唯一一个能通杀 C 和 Python 的截获点，就是 <strong>FD 1 本身</strong>。</p>
+<p><code>os.dup2(new_fd, 1)</code> 可以把 FD 1 重定向到任意目标：一个临时文件、一个管道、甚至 <code>/dev/null</code>。替换之后，不管是谁写 FD 1，数据都流到新目标上。</p>
+<p>看一段纯 Python 的演示（直接用 <code>libhello.so</code>）：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="python"><span class="giallo-l"><span style="color: #FF79C6;">import</span><span> os, tempfile, ctypes</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>libhello</span><span style="color: #FF79C6;"> =</span><span> ctypes.CDLL(</span><span style="color: #E9F284;">&quot;</span><span style="color: #F1FA8C;">./libhello.so</span><span style="color: #E9F284;">&quot;</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6272A4;"># ---------- 开始捕获 ----------</span></span>
+<span class="giallo-l"><span>ctypes.CDLL(</span><span style="color: #BD93F9;">None</span><span>).fflush(</span><span style="color: #BD93F9;">None</span><span>)</span><span style="color: #6272A4;">       # flush 替换前的老 buffer</span></span>
+<span class="giallo-l"><span>tmp</span><span style="color: #FF79C6;"> =</span><span> tempfile.NamedTemporaryFile(</span><span style="color: #FFB86C;font-style: italic;">delete</span><span style="color: #FF79C6;">=</span><span style="color: #BD93F9;">False</span><span>)</span></span>
+<span class="giallo-l"><span>tmp.close()</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>orig_fd</span><span style="color: #FF79C6;"> =</span><span> os.dup(</span><span style="color: #BD93F9;">1</span><span>)</span><span style="color: #6272A4;">                  # 保存原始的 FD 1</span></span>
+<span class="giallo-l"><span>tmp_fd</span><span style="color: #FF79C6;"> =</span><span> os.open(tmp.name, os.</span><span style="color: #BD93F9;">O_WRONLY</span><span>)</span></span>
+<span class="giallo-l"><span>os.dup2(tmp_fd,</span><span style="color: #BD93F9;"> 1</span><span>)</span><span style="color: #6272A4;">                   # FD 1 → 指向临时文件</span></span>
+<span class="giallo-l"><span>os.close(tmp_fd)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6272A4;"># ---------- 被捕获的代码 ----------</span></span>
+<span class="giallo-l"><span>libhello.say_hello()</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>ctypes.CDLL(</span><span style="color: #BD93F9;">None</span><span>).fflush(</span><span style="color: #BD93F9;">None</span><span>)</span><span style="color: #6272A4;">        # flush 替换后的新 buffer -&gt; 进入临时文件</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6272A4;"># ---------- 恢复 FD 1 ----------</span></span>
+<span class="giallo-l"><span>os.dup2(orig_fd,</span><span style="color: #BD93F9;"> 1</span><span>)</span><span style="color: #6272A4;">                  # 恢复原始 FD 1</span></span>
+<span class="giallo-l"><span>os.close(orig_fd)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6272A4;"># ---------- 读取捕获 ----------</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">with</span><span style="color: #8BE9FD;"> open</span><span>(tmp.name)</span><span style="color: #FF79C6;"> as</span><span> f:</span></span>
+<span class="giallo-l"><span>    content</span><span style="color: #FF79C6;"> =</span><span> f.read()</span></span>
+<span class="giallo-l"><span>os.unlink(tmp.name)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">print</span><span>(</span><span style="color: #8BE9FD;">repr</span><span>(content))</span></span></code></pre>
+<p>输出：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="plain"><span class="giallo-l"><span>&#39;Hello World!&#39;</span></span></code></pre>
+<p>不管 C 还是 Python，都被截到了同一个文件里。</p>
+<p>流程图：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="plain"><span class="giallo-l"><span>printf(&quot;Hello World!&quot;) → FILE* buffer → write(1, buf) ──→ [FD 1]</span></span>
+<span class="giallo-l"><span>                                                             │</span></span>
+<span class="giallo-l"><span>                                                  os.dup2 →  ▼</span></span>
+<span class="giallo-l"><span>                                                          临时文件</span></span></code></pre>
+<hr />
+<h2 id="c-biao-zhun-ku-de-huan-chong-qu">C 标准库的缓冲区</h2>
+<p>上面的演示能抓到数据，是因为 <code>say_hello</code> 返回后，共享库代码里没有额外 buffer 滞留问题（<code>printf</code> 写完马上返回）。但如果你在一个<strong>正在运行的 Python 进程里调 C 扩展库</strong>，情况就不同了：</p>
+<ul>
+<li>C 扩展库调了 <code>printf("Hello World!")</code>，没有 <code>\n</code></li>
+<li>如果你的进程不是连接到终端（比如被重定向了），C 的缓冲模式变成全缓冲</li>
+<li>"Hello World!" 躺在 FILE buffer 里，还没 <code>write</code> 出去</li>
+<li>你 <code>os.dup2</code> 换了 FD 1——换的是水管出水口，但水箱里的水还在水箱里</li>
+</ul>
+<p>形象地说：你换掉了水管出口（FD 1 → 文件），但 C 的水箱（FILE buffer）里的水还在里面，没放出来。</p>
+<p>解法是：<strong>手动让 C 吐出 buffer</strong>。</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="python"><span class="giallo-l"><span style="color: #FF79C6;">import</span><span> ctypes</span></span>
+<span class="giallo-l"><span>libc</span><span style="color: #FF79C6;"> =</span><span> ctypes.CDLL(</span><span style="color: #BD93F9;">None</span><span>)</span><span style="color: #6272A4;">   # 获取当前进程的全局符号表</span></span>
+<span class="giallo-l"><span>libc.fflush(</span><span style="color: #BD93F9;">None</span><span>)</span><span style="color: #6272A4;">           # 等价于 C 的 fflush(NULL)，刷新所有输出流</span></span></code></pre>
+<p><code>ctypes.CDLL(None)</code> 返回一个代表当前进程全局符号的 CDLL 对象，可以调用任何 C 标准库函数。<code>fflush(NULL)</code> 在 C 里的语义是"把所有输出流的 buffer 都刷出去"。</p>
+<p>把这个操作封装成两个步骤：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="python"><span class="giallo-l"><span style="color: #FF79C6;">import</span><span> os, tempfile, ctypes</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF79C6;">def</span><span style="color: #50FA7B;"> start_capture</span><span>():</span></span>
+<span class="giallo-l"><span>    ctypes.CDLL(</span><span style="color: #BD93F9;">None</span><span>).fflush(</span><span style="color: #BD93F9;">None</span><span>)</span><span style="color: #6272A4;">      # flush 替换前的老 buffer</span></span>
+<span class="giallo-l"><span>    tmp</span><span style="color: #FF79C6;"> =</span><span> tempfile.NamedTemporaryFile(</span><span style="color: #FFB86C;font-style: italic;">delete</span><span style="color: #FF79C6;">=</span><span style="color: #BD93F9;">False</span><span>)</span></span>
+<span class="giallo-l"><span>    tmp.close()</span></span>
+<span class="giallo-l"><span>    saved_fd</span><span style="color: #FF79C6;"> =</span><span> os.dup(</span><span style="color: #BD93F9;">1</span><span>)</span></span>
+<span class="giallo-l"><span>    os.dup2(os.open(tmp.name, os.</span><span style="color: #BD93F9;">O_WRONLY</span><span>),</span><span style="color: #BD93F9;"> 1</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">    return</span><span> tmp.name, saved_fd</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #FF79C6;">def</span><span style="color: #50FA7B;"> stop_capture</span><span>(</span><span style="color: #FFB86C;font-style: italic;">tmp_path</span><span>,</span><span style="color: #FFB86C;font-style: italic;"> saved_fd</span><span>):</span></span>
+<span class="giallo-l"><span>    ctypes.CDLL(</span><span style="color: #BD93F9;">None</span><span>).fflush(</span><span style="color: #BD93F9;">None</span><span>)</span><span style="color: #6272A4;">      # flush 替换后的新 buffer</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">    with</span><span style="color: #8BE9FD;"> open</span><span>(tmp_path)</span><span style="color: #FF79C6;"> as</span><span> f:</span></span>
+<span class="giallo-l"><span>        content</span><span style="color: #FF79C6;"> =</span><span> f.read()</span></span>
+<span class="giallo-l"><span>    os.dup2(saved_fd,</span><span style="color: #BD93F9;"> 1</span><span>)</span><span style="color: #6272A4;">                # 恢复 FD 1</span></span>
+<span class="giallo-l"><span>    os.close(saved_fd)</span></span>
+<span class="giallo-l"><span>    os.unlink(tmp_path)</span></span>
+<span class="giallo-l"><span style="color: #FF79C6;">    return</span><span> content</span></span></code></pre>
+<p>两个 <code>fflush</code> 各司其职：</p>
+<ul>
+<li><strong>替换前 flush</strong>：确保替换前 C 可能积压在 buffer 里的老数据已经被写走，不会因为 FD 1 被换掉而丢失</li>
+<li><strong>替换后 flush</strong>：确保被捕获的 C 代码写到 buffer 的最新数据被推到 FD 1，进入临时文件</li>
+</ul>
+<p>演示：</p>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="python"><span class="giallo-l"><span>libhello</span><span style="color: #FF79C6;"> =</span><span> ctypes.CDLL(</span><span style="color: #E9F284;">&quot;</span><span style="color: #F1FA8C;">./libhello.so</span><span style="color: #E9F284;">&quot;</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>tmp_path, saved_fd</span><span style="color: #FF79C6;"> =</span><span> start_capture()</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>libhello.say_hello()</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>content</span><span style="color: #FF79C6;"> =</span><span> stop_capture(tmp_path, saved_fd)</span></span>
+<span class="giallo-l"><span style="color: #8BE9FD;">print</span><span>(</span><span style="color: #8BE9FD;">repr</span><span>(content))</span></span></code></pre>
+<p>如果没有 <code>start_capture</code> 里的 <code>fflush</code>，"Hello World!" 可能就丢了；如果没有 <code>stop_capture</code> 里的 <code>fflush</code>，"Captured!" 可能还没进文件。</p>
+<hr />
+<hr />
+<h2 id="wan-zheng-liu-cheng-hui-gu">完整流程回顾</h2>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="plain"><span class="giallo-l"><span>// hello.c</span></span>
+<span class="giallo-l"><span>void say_hello() { printf(&quot;Hello World!&quot;); }</span></span>
+<span class="giallo-l"><span>                   │</span></span>
+<span class="giallo-l"><span>                   ▼</span></span>
+<span class="giallo-l"><span>C printf(&quot;Hello World!&quot;) ──→ FILE* buffer ──→ fflush(NULL)</span></span>
+<span class="giallo-l"><span>                                                     │</span></span>
+<span class="giallo-l"><span>                                                     ▼</span></span>
+<span class="giallo-l"><span>                                               write(1, buf)      ← 系统调用，FD 1</span></span>
+<span class="giallo-l"><span>                                                     │</span></span>
+<span class="giallo-l"><span>                                                os.dup2           ← Python 拦截</span></span>
+<span class="giallo-l"><span>                                                     │</span></span>
+<span class="giallo-l"><span>                                                     ▼</span></span>
+<span class="giallo-l"><span>                                               临时文件/管道       ← Python 可读</span></span>
+<span class="giallo-l"><span>                                                     │</span></span>
+<span class="giallo-l"><span>                                                     ▼</span></span>
+<span class="giallo-l"><span>                                       Python open + read / os.read</span></span></code></pre>
+<p>三个关键工具：</p>
+<table><thead><tr><th>工具</th><th>作用</th><th>为什么需要</th></tr></thead><tbody>
+<tr><td><code>os.dup2(new_fd, 1)</code></td><td>替换文件描述符 1</td><td>C/Python 最终都走 FD 1，这是唯一通杀的截获点</td></tr>
+<tr><td><code>ctypes.CDLL(None).fflush(None)</code></td><td>强制 C 刷新 FILE buffer</td><td>C 的数据可能还积在 buffer 里，没到 FD 1</td></tr>
+</tbody></table>
+<hr />
+<h2 id="zong-jie-yi-zhang-nao-tu">总结：一张脑图</h2>
+<pre class="giallo" style="color: #F8F8F2; background-color: #282A36;"><code data-lang="plain"><span class="giallo-l"><span>                        ┌─────────────────────┐</span></span>
+<span class="giallo-l"><span>                        │   C printf()        │</span></span>
+<span class="giallo-l"><span>                        │   Python print()    │</span></span>
+<span class="giallo-l"><span>                        └─────────┬───────────┘</span></span>
+<span class="giallo-l"><span>                                  │</span></span>
+<span class="giallo-l"><span>                        ┌─────────▼───────────┐</span></span>
+<span class="giallo-l"><span>                        │    FILE* buffer     │  ← C 标准库层</span></span>
+<span class="giallo-l"><span>                        │   (行缓冲 / 全缓冲)  │     Python 看不见</span></span>
+<span class="giallo-l"><span>                        └─────────┬───────────┘</span></span>
+<span class="giallo-l"><span>                                  │ fflush(NULL)</span></span>
+<span class="giallo-l"><span>                        ┌─────────▼───────────┐</span></span>
+<span class="giallo-l"><span>                        │   write(FD 1)       │  ← 操作系统层</span></span>
+<span class="giallo-l"><span>                        └─────────┬───────────┘</span></span>
+<span class="giallo-l"><span>                                  │ os.dup2()</span></span>
+<span class="giallo-l"><span>                        ┌─────────▼───────────┐</span></span>
+<span class="giallo-l"><span>                        │   临时文件 / 管道    │  ← Python 可以读</span></span>
+<span class="giallo-l"><span>                        └─────────────────────┘</span></span></code></pre>
+<ul>
+<li>不要想着在 Python 层（<code>sys.stdout</code> 替换）去抓 C 的输出——那是两张皮</li>
+<li>文件描述符 1 是所有语言最后共同经过的唯一路口，用 <code>os.dup2</code> 在那里动手</li>
+<li>不要忘了 C 标准库的缓冲区，<code>fflush</code> 是你的朋友</li>
+</ul>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https://luizyao.github.io/blog/tags/c-c/">#C&#x2F;C++</a>
+                    
+                        <a href="https://luizyao.github.io/blog/tags/python/">#Python</a>
+                    
+                </div>
+            
+            
+
+        
+
+    </div>
+
+    <div class="post-footer">
+    
+    
+    </div>
+
+    
+        <div id="vcomments"></div>
+        <script>
+            new Valine({
+                el: '#vcomments',
+                appId: 'ELAxhd0CdYZzYItFv1aOgfkU-gzGzoHsz',
+                appKey: 'Dn5ewE2hhnJwQXe1LsucljYV',
+                visitor: true // 阅读量统计
+            })
+        </script>
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            <div style="text-align: center;">
+                <span class="author">
+                    © 2020-2025 Luiz Yao
+                </span>
+                 &nbsp;|&nbsp;
+                <span class="license">
+                    <a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh-Hans" target="_blank">CC BY-NC 4.0</a>
+                </span>
+            </div>
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https://luizyao.github.io/blog/even.js" ></script>
+      
+    </body>
+
+</html>
